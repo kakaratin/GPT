@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>KingDev Tool Portal</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <div class="container">
+        <h1>KingDev Cloud Toolkit</h1>
+        <p class="tagline">
+          Embedded access to <a href="https://cloud.kingdev.site/tool.php" target="_blank" rel="noopener">cloud.kingdev.site/tool.php</a>
+          with built-in speech-to-text helpers powered by Buster.
+        </p>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="portal">
+        <div class="section-heading">
+          <h2>Tool Portal</h2>
+          <p>
+            The tool is sandboxed below via an iframe so you can keep the solver tools handy in the same tab.
+          </p>
+        </div>
+        <div class="iframe-wrapper">
+          <iframe
+            src="https://cloud.kingdev.site/tool.php"
+            title="KingDev cloud tool"
+            loading="lazy"
+            referrerpolicy="no-referrer"
+            sandbox="allow-scripts allow-forms allow-same-origin allow-popups"
+          ></iframe>
+        </div>
+        <p class="iframe-note">
+          If the iframe shows a blank page or a browser warning, open the tool in a new tab above. Some hosts disallow
+          embedding for security reasons.
+        </p>
+      </section>
+
+      <section class="speech">
+        <div class="section-heading">
+          <h2>Speech-to-Text Recognizer</h2>
+          <p>
+            This client reuses open-source components from the
+            <a href="https://github.com/dessant/buster" target="_blank" rel="noopener">Buster</a> project (GPL-3.0).
+            Provide your own API credentials for the supported providers.
+          </p>
+        </div>
+
+        <form id="speech-form" class="speech-form">
+          <div class="field-group">
+            <label for="service">Speech service</label>
+            <select id="service" name="service" required>
+              <option value="wit">Wit.ai Speech API</option>
+              <option value="google">Google Cloud Speech-to-Text</option>
+              <option value="ibm">IBM Watson Speech to Text</option>
+              <option value="microsoft">Microsoft Azure Speech to Text</option>
+            </select>
+          </div>
+
+          <div id="service-config" class="service-config" data-service="wit">
+            <!-- dynamic controls inserted here -->
+          </div>
+
+          <div class="field-group">
+            <label for="language">CAPTCHA language</label>
+            <select id="language" name="language" required></select>
+          </div>
+
+          <div class="field-group file-input">
+            <label for="audio">Audio challenge file</label>
+            <input id="audio" name="audio" type="file" accept="audio/*" required />
+            <p class="help-text">
+              Download the CAPTCHA audio (or record your own) and drop it here. The helper will trim quiet edges and convert it to WAV before calling the API.
+            </p>
+          </div>
+
+          <div class="field-group checkbox">
+            <input type="checkbox" id="fallback" name="fallback" checked />
+            <label for="fallback">Try English model if the selected language fails</label>
+          </div>
+
+          <button id="submit-btn" type="submit">Transcribe Audio</button>
+        </form>
+
+        <output id="speech-output" class="speech-output" aria-live="polite"></output>
+      </section>
+
+      <section class="license">
+        <div class="section-heading">
+          <h2>Licensing</h2>
+          <p>
+            Portions of the speech recognizer logic are adapted from the Buster browser extension and are therefore distributed under the terms of the GNU General Public License v3.0.
+          </p>
+          <p>
+            <a href="/third-party-notices.txt" target="_blank" rel="noopener">View license notices</a>
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <script type="module" src="/scripts/app.js"></script>
+  </body>
+</html>
