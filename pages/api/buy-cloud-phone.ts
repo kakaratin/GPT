@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import crypto from 'crypto';
 
 interface Account {
   account: string;
@@ -9,25 +8,12 @@ interface Account {
 interface RequestBody {
   service: 'Vsphone' | 'Vmos';
   accounts: Account[];
-  timestamp: number;
-  signature: string;
 }
 
 type ResponseData = {
   success: boolean;
   message: string;
 };
-
-// Secret key (in production, use environment variable)
-const SECRET_KEY = 'tdjs_2025_secure_key_' + process.env.VERCEL_GIT_COMMIT_SHA || 'fallback_secret';
-
-function verifySignature(data: string, signature: string): boolean {
-  const expectedSignature = crypto
-    .createHmac('sha256', SECRET_KEY)
-    .update(data)
-    .digest('hex');
-  return signature === expectedSignature;
-}
 
 export default async function handler(
   req: NextApiRequest,
@@ -38,36 +24,19 @@ export default async function handler(
   }
 
   try {
-    // Check origin/referer
-    const origin = req.headers.origin || req.headers.referer;
-    const host = req.headers.host;
+    // Simple origin check - must come from the same domain
+    const referer = req.headers.referer || req.headers.origin || '';
+    const host = req.headers.host || '';
     
-    if (!origin || (!origin.includes(host || '') && !origin.includes('vercel.app'))) {
+    // Only accept requests from the actual site (not random curl commands)
+    if (!referer.includes(host) && !referer.includes('vercel.app')) {
       return res.status(403).json({
         success: false,
-        message: 'Access denied. Invalid origin.',
+        message: 'Access denied.',
       });
     }
 
-    const { service, accounts, timestamp, signature }: RequestBody = req.body;
-
-    // Validate timestamp (must be within 5 minutes)
-    const now = Date.now();
-    if (!timestamp || Math.abs(now - timestamp) > 300000) {
-      return res.status(400).json({
-        success: false,
-        message: 'Request expired. Please try again.',
-      });
-    }
-
-    // Verify signature
-    const dataToSign = `${service}${JSON.stringify(accounts)}${timestamp}`;
-    if (!signature || !verifySignature(dataToSign, signature)) {
-      return res.status(403).json({
-        success: false,
-        message: 'Invalid request signature.',
-      });
-    }
+    const { service, accounts }: RequestBody = req.body;
 
     // Validate input
     if (!service || !accounts || accounts.length === 0) {
@@ -77,7 +46,7 @@ export default async function handler(
       });
     }
 
-    // Process through our proprietary system
+    // Process through backend system
     const apiEndpoint = Buffer.from('aHR0cHM6Ly9tZW93cy5pby52bi9hcGkvYnV5LWNsb3VkLXBob25l', 'base64').toString('utf-8');
     
     const response = await fetch(apiEndpoint, {

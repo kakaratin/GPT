@@ -50,27 +50,6 @@ export default function Home() {
     }
   };
 
-  // Generate request signature
-  const generateSignature = async (data: string): Promise<string> => {
-    const encoder = new TextEncoder();
-    const dataBuffer = encoder.encode(data);
-    const secretKey = 'tdjs_2025_secure_key_' + (typeof window !== 'undefined' ? window.location.hostname : '');
-    const keyBuffer = encoder.encode(secretKey);
-    
-    const cryptoKey = await crypto.subtle.importKey(
-      'raw',
-      keyBuffer,
-      { name: 'HMAC', hash: 'SHA-256' },
-      false,
-      ['sign']
-    );
-    
-    const signature = await crypto.subtle.sign('HMAC', cryptoKey, dataBuffer);
-    return Array.from(new Uint8Array(signature))
-      .map(b => b.toString(16).padStart(2, '0'))
-      .join('');
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -78,9 +57,6 @@ export default function Home() {
 
     try {
       const filteredAccounts = accounts.filter(acc => acc.account && acc.password);
-      const timestamp = Date.now();
-      const dataToSign = `${service}${JSON.stringify(filteredAccounts)}${timestamp}`;
-      const signature = await generateSignature(dataToSign);
 
       const response = await fetch('/api/buy-cloud-phone', {
         method: 'POST',
@@ -90,8 +66,6 @@ export default function Home() {
         body: JSON.stringify({
           service,
           accounts: filteredAccounts,
-          timestamp,
-          signature,
         }),
       });
 
