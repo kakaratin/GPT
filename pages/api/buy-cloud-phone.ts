@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import crypto from 'crypto';
 
 interface Account {
   account: string;
@@ -8,12 +9,25 @@ interface Account {
 interface RequestBody {
   service: 'Vsphone' | 'Vmos';
   accounts: Account[];
+  timestamp: number;
+  signature: string;
 }
 
 type ResponseData = {
   success: boolean;
   message: string;
 };
+
+// Secret key (in production, use environment variable)
+const SECRET_KEY = 'tdjs_2025_secure_key_' + process.env.VERCEL_GIT_COMMIT_SHA || 'fallback_secret';
+
+function verifySignature(data: string, signature: string): boolean {
+  const expectedSignature = crypto
+    .createHmac('sha256', SECRET_KEY)
+    .update(data)
+    .digest('hex');
+  return signature === expectedSignature;
+}
 
 export default async function handler(
   req: NextApiRequest,
@@ -24,7 +38,36 @@ export default async function handler(
   }
 
   try {
-    const { service, accounts }: RequestBody = req.body;
+    // Check origin/referer
+    const origin = req.headers.origin || req.headers.referer;
+    const host = req.headers.host;
+    
+    if (!origin || (!origin.includes(host || '') && !origin.includes('vercel.app'))) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied. Invalid origin.',
+      });
+    }
+
+    const { service, accounts, timestamp, signature }: RequestBody = req.body;
+
+    // Validate timestamp (must be within 5 minutes)
+    const now = Date.now();
+    if (!timestamp || Math.abs(now - timestamp) > 300000) {
+      return res.status(400).json({
+        success: false,
+        message: 'Request expired. Please try again.',
+      });
+    }
+
+    // Verify signature
+    const dataToSign = `${service}${JSON.stringify(accounts)}${timestamp}`;
+    if (!signature || !verifySignature(dataToSign, signature)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Invalid request signature.',
+      });
+    }
 
     // Validate input
     if (!service || !accounts || accounts.length === 0) {
@@ -53,20 +96,17 @@ export default async function handler(
     const data = await response.json();
 
     if (!response.ok) {
-      // Generic error - don't expose any backend details
       return res.status(400).json({
         success: false,
         message: 'Unable to process your request. Please check your credentials and try again.',
       });
     }
 
-    // Success - don't expose any backend details
     return res.status(200).json({
       success: true,
       message: 'Trial purchase completed successfully! Check your account.',
     });
   } catch (error) {
-    // Log server-side only, never expose to client
     console.error('[SYSTEM]', error);
     return res.status(500).json({
       success: false,
