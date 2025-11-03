@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+:root {
+  --tdjs-gradient:
+    radial-gradient(circle at 0% 0%, rgba(29, 78, 216, 0.35), transparent 55%),
+    radial-gradient(circle at 100% 10%, rgba(99, 102, 241, 0.3), transparent 45%),
+    radial-gradient(circle at 50% 100%, rgba(56, 189, 248, 0.28), transparent 55%),
+    #020617;
+  --tdjs-foreground: #f8fafc;
+}
+
+@theme inline {
+  --color-background: transparent;
+  --color-foreground: var(--tdjs-foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  min-height: 100vh;
+  background: var(--tdjs-gradient);
+  color: var(--tdjs-foreground);
+}
+
+::selection {
+  background-color: rgba(56, 189, 248, 0.35);
+  color: #0f172a;
+}
