@@ -291,7 +291,7 @@ export default function Home() {
                         Processing...
                       </span>
                     ) : (
-                      '?? Purchase Cloud Phone'
+                      'Purchase Cloud Phone'
                     )}
                   </button>
                 </form>
@@ -324,69 +324,69 @@ export default function Home() {
                 <div className="bg-slate-900/50 rounded-xl p-6 border border-slate-700">
                   <h3 className="text-xl font-bold text-cyan-400 mb-3 flex items-center gap-2">
                     <span className="flex items-center justify-center w-8 h-8 bg-cyan-500 text-white rounded-full text-sm">1</span>
-                    Advanced Authentication System
+                    The Trial Problem
                   </h3>
                   <p className="leading-relaxed">
-                    TdjsBuytool uses a proprietary authentication protocol to securely connect with cloud phone providers. 
-                    Our system establishes encrypted connections and validates your credentials through our secure servers, 
-                    ensuring your account information remains protected throughout the entire process.
+                    Many users face a common issue: after using their trial period on Vsphone or Vmos, they cannot purchase 
+                    new trials anymore. The services block you from getting another trial, even if you want to test more features 
+                    or use different accounts. This is frustrating when you need temporary cloud phones for testing purposes.
                   </p>
                 </div>
 
                 <div className="bg-slate-900/50 rounded-xl p-6 border border-slate-700">
                   <h3 className="text-xl font-bold text-purple-400 mb-3 flex items-center gap-2">
                     <span className="flex items-center justify-center w-8 h-8 bg-purple-500 text-white rounded-full text-sm">2</span>
-                    Intelligent Request Processing
+                    How TdjsBuytool Helps
                   </h3>
                   <p className="leading-relaxed">
-                    Our backend automation engine processes your purchase requests using advanced algorithms that optimize 
-                    transaction speed and reliability. The system intelligently handles multiple accounts simultaneously, 
-                    managing request queues and error handling to ensure successful purchases every time.
+                    TdjsBuytool solves this problem by allowing you to purchase cloud phone trials even when you're blocked 
+                    from buying them directly. Our system bypasses the normal restrictions and processes your purchase request 
+                    through an alternative method, giving you access to trials that would otherwise be unavailable to you.
                   </p>
                 </div>
 
                 <div className="bg-slate-900/50 rounded-xl p-6 border border-slate-700">
                   <h3 className="text-xl font-bold text-pink-400 mb-3 flex items-center gap-2">
                     <span className="flex items-center justify-center w-8 h-8 bg-pink-500 text-white rounded-full text-sm">3</span>
-                    Seamless Service Integration
+                    Multiple Account Support
                   </h3>
                   <p className="leading-relaxed">
-                    TdjsBuytool integrates directly with Vsphone and Vmos cloud infrastructure using our custom-built 
-                    middleware layer. This proprietary integration allows for real-time provisioning and instant activation 
-                    of your cloud phones without manual intervention.
+                    Need trials for multiple accounts? No problem! TdjsBuytool supports bulk purchasing. Simply add all your 
+                    accounts using the quick import feature (email|password format), and purchase trials for all of them at once. 
+                    This is perfect for users who manage multiple test accounts or need several cloud phones simultaneously.
                   </p>
                 </div>
 
                 <div className="bg-slate-900/50 rounded-xl p-6 border border-slate-700">
                   <h3 className="text-xl font-bold text-green-400 mb-3 flex items-center gap-2">
                     <span className="flex items-center justify-center w-8 h-8 bg-green-500 text-white rounded-full text-sm">4</span>
-                    Real-Time Status Updates
+                    Instant Activation
                   </h3>
                   <p className="leading-relaxed">
-                    Throughout the purchase process, our system provides real-time feedback and status updates. 
-                    You'll receive instant notifications about the success or failure of each transaction, along with 
-                    detailed error messages if any issues occur, allowing for quick troubleshooting.
+                    Once you submit your purchase request, TdjsBuytool processes everything automatically and provides instant 
+                    feedback. You'll know immediately if your trial purchase was successful or if there were any issues. 
+                    No waiting around - get your cloud phone trials activated right away!
                   </p>
                 </div>
 
                 <div className="bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-xl p-6 border border-cyan-500/50">
-                  <h3 className="text-xl font-bold text-white mb-3">?? Important Requirements</h3>
+                  <h3 className="text-xl font-bold text-white mb-3">Important Requirements</h3>
                   <ul className="space-y-2">
                     <li className="flex items-start gap-2">
-                      <span className="text-cyan-400 mt-1">?</span>
-                      <span>You must have an existing account on Vsphone or Vmos before using this tool</span>
+                      <span className="text-cyan-400 mt-1">-</span>
+                      <span>Create a new account on Vsphone or Vmos (or use your existing blocked account)</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-cyan-400 mt-1">?</span>
-                      <span>Ensure your account has sufficient balance or credits for purchases</span>
+                      <span className="text-cyan-400 mt-1">-</span>
+                      <span>Have your account credentials ready (email and password)</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-cyan-400 mt-1">?</span>
-                      <span>Keep your login credentials secure and never share them with others</span>
+                      <span className="text-cyan-400 mt-1">-</span>
+                      <span>Use the quick import feature for multiple accounts (email|password format)</span>
                     </li>
                     <li className="flex items-start gap-2">
-                      <span className="text-cyan-400 mt-1">?</span>
-                      <span>Use the bulk import feature for faster processing of multiple accounts</span>
+                      <span className="text-cyan-400 mt-1">-</span>
+                      <span>Works even if you've already used your trial before!</span>
                     </li>
                   </ul>
                 </div>
@@ -399,7 +399,7 @@ export default function Home() {
         <div className="max-w-6xl mx-auto mt-12 text-center">
           <div className="bg-slate-800/30 backdrop-blur-sm rounded-2xl p-6 border border-slate-700">
             <p className="text-gray-400 text-sm">
-              ? 2024 TdjsBuytool. All rights reserved. | Powered by Advanced Automation Technology
+              ? 2025 TdjsBuytool. All rights reserved. | Powered by Advanced Automation Technology
             </p>
             <div className="mt-3 flex justify-center gap-4">
               <a href="https://www.facebook.com/share/16TXgXRaBb/" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 transition-colors">

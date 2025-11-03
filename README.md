@@ -1,45 +1,50 @@
-# ?? TdjsBuytool - Cloud Phone Purchase Automation
+# TdjsBuytool - Cloud Phone Trial Purchase Tool
 
-A modern, powerful web application to automate cloud phone purchases. Built with Next.js, TypeScript, and Tailwind CSS featuring an ultra-modern dark UI.
-
-![TdjsBuytool Banner](https://img.shields.io/badge/TdjsBuytool-Cloud%20Phone%20Automation-blue?style=for-the-badge)
+A powerful web application to help you purchase cloud phone trials on Vsphone and Vmos, even when you're blocked from buying them directly. Built with Next.js, TypeScript, and Tailwind CSS featuring an ultra-modern dark UI.
 
 ---
 
-## ? Features
+## Features
 
-- ?? **Ultra-Modern Dark UI** - Stunning dark theme with neon gradients and glass morphism effects
-- ? **Quick Import** - Paste accounts in `email|password` format for instant parsing
-- ?? **Multi-Account Support** - Purchase cloud phones for multiple accounts at once
-- ?? **Two Services** - Support for both Vsphone and Vmos services
-- ?? **How It Works Tab** - Educational section explaining the automation process
-- ?? **Social Integration** - Direct Facebook link for community support
-- ?? **Bulk Processing** - Handle multiple accounts simultaneously with ease
-- ?? **Vercel Ready** - One-click deployment to Vercel
+- **Ultra-Modern Dark UI** - Stunning dark theme with neon gradients and glass morphism effects
+- **Quick Import** - Paste accounts in `email|password` format for instant parsing
+- **Multi-Account Support** - Purchase trials for multiple accounts at once
+- **Two Services** - Support for both Vsphone and Vmos
+- **Trial Abuse Helper** - Buy trials even when you're blocked from purchasing
+- **How It Works Tab** - Educational section explaining the tool's purpose
+- **Social Integration** - Direct Facebook link for community support
+- **Bulk Processing** - Handle multiple accounts simultaneously with ease
+- **Vercel Ready** - One-click deployment to Vercel
 
 ---
 
-## ?? Prerequisites
+## What This Tool Does
 
-Before using TdjsBuytool, you **MUST** create accounts on the service you want to use:
+**TdjsBuytool helps trial abusers purchase new cloud phone trials when they can't buy them anymore.**
+
+Many users face restrictions after using their trial period on Vsphone or Vmos. The services block you from getting another trial. This tool bypasses those restrictions and allows you to purchase trials for your accounts, even if you've used trials before.
+
+---
+
+## Prerequisites
+
+You need accounts on the service you want to use:
 
 ### For Vsphone:
-1. Visit the Vsphone service website
-2. Create a new account with your email/username and password
-3. Keep your credentials ready
+1. Create an account on Vsphone (or use your existing blocked account)
+2. Have your credentials ready
 
 ### For Vmos:
-1. Visit the Vmos service website
-2. Create a new account with your email/username and password
-3. Keep your credentials ready
+1. Create an account on Vmos (or use your existing blocked account)
+2. Have your credentials ready
 
-**?? Important:** This tool automates the purchase process for existing accounts. You cannot purchase cloud phones without first creating an account on the respective service.
+**Note:** This tool works even if you're blocked from buying trials through the normal method!
 
 ---
 
-## ?? Quick Start
+## Quick Start
 
-### Deploy to Vercel (Recommended)
+### Deploy to Vercel
 
 1. **Install dependencies:**
    ```bash
@@ -70,22 +75,22 @@ Before using TdjsBuytool, you **MUST** create accounts on the service you want t
 
 ---
 
-## ?? How to Use
+## How to Use
 
-### Method 1: Quick Import (Recommended) ??
+### Method 1: Quick Import (Recommended)
 
-This is the easiest and fastest way to add multiple accounts!
+This is the easiest and fastest way!
 
 1. **Copy your accounts** in this format (one per line):
    ```
    email1@example.com|password123
    email2@example.com|password456
-   email3@example.com|password789
+   byvikete@forexzig.com|0909pp09
    ```
 
 2. **Paste into the "Quick Import" box** on the left side
 
-3. **Click "Parse Accounts"** - All accounts will be automatically split and loaded into the form!
+3. **Click "Parse Accounts"** - All accounts will be automatically loaded!
 
 4. **Select your service** (Vsphone or Vmos)
 
@@ -93,54 +98,39 @@ This is the easiest and fastest way to add multiple accounts!
 
 ### Method 2: Manual Entry
 
-1. **Select Your Service**
-   - Choose between **Vsphone** or **Vmos**
+1. **Select Your Service** (Vsphone or Vmos)
+2. **Enter email/username and password manually**
+3. **Click "Add Another Account"** for multiple accounts
+4. **Click "Purchase Cloud Phone"**
 
-2. **Enter Account Credentials**
-   - Enter email/username and password manually
-   - Click "Add Another Account" for multiple accounts
+---
 
-3. **Purchase**
-   - Click "Purchase Cloud Phone" button
-   - Wait for success confirmation
+## Quick Import Format
 
-### Example Usage
-
-**Quick Import Format:**
+Simply paste your accounts like this:
 ```
 byvikete@forexzig.com|0909pp09
 another@example.com|password123
 user3@example.com|mypass789
 ```
 
-**Manual Entry:**
-- Service: `Vsphone` or `Vmos`
-- Account: `your-email@example.com`
-- Password: `your-password`
+One account per line, separated by a pipe `|` character.
 
 ---
 
-## ?? New Features Explained
+## How It Works Tab
 
-### Quick Import Feature
-The quick import feature allows you to paste multiple accounts at once using the format `email|password`. Simply:
-1. Copy your account list
-2. Paste into the Quick Import textarea
-3. Click "Parse Accounts"
-4. All accounts are instantly loaded!
+The site includes a "How It Works" tab that explains:
+- The trial restriction problem
+- How TdjsBuytool bypasses the restrictions
+- Multiple account support
+- Instant activation process
 
-### How It Works Tab
-Learn about the automation technology behind TdjsBuytool:
-- Advanced authentication system
-- Intelligent request processing
-- Seamless service integration
-- Real-time status updates
-
-This educational section helps users understand the power of the automation without technical jargon.
+This helps users understand what the tool does without exposing the technical implementation.
 
 ---
 
-## ??? Technology Stack
+## Technology Stack
 
 - **Framework:** Next.js 14
 - **Language:** TypeScript
@@ -150,50 +140,17 @@ This educational section helps users understand the power of the automation with
 
 ---
 
-## ?? Project Structure
+## Design Features
 
-```
-tdjs-buytool/
-??? pages/
-?   ??? api/
-?   ?   ??? buy-cloud-phone.ts    # API endpoint for purchases
-?   ??? _app.tsx                   # App wrapper
-?   ??? index.tsx                  # Main page with tabs
-??? styles/
-?   ??? globals.css                # Global styles with dark theme
-??? public/                        # Static assets
-??? package.json                   # Dependencies
-??? tsconfig.json                  # TypeScript config
-??? tailwind.config.js             # Tailwind config
-??? next.config.js                 # Next.js config
-??? vercel.json                    # Vercel deployment config
-??? README.md                      # This file
-```
-
----
-
-## ?? Design Features
-
-- **Dark Theme** - Easy on the eyes with a professional look
+- **Dark Theme** - Professional slate/black background
 - **Neon Gradients** - Cyan, blue, purple, and pink accents
 - **Glass Morphism** - Modern frosted glass effects
-- **Smooth Animations** - Hover effects and transitions
-- **Responsive Design** - Works perfectly on all devices
-- **Tab Navigation** - Easy switching between Purchase and How It Works
+- **Tab Navigation** - Purchase and How It Works tabs
+- **Responsive Design** - Works on all devices
 
 ---
 
-## ?? Security Notes
-
-- Never commit your actual account credentials to the repository
-- The application doesn't store any credentials - they're only used for the API call
-- All requests are made server-side through the Next.js API route
-- Credentials are transmitted securely via HTTPS when deployed
-- The quick import feature processes data client-side only
-
----
-
-## ?? Current Deployment
+## Current Deployment
 
 **Live URL:** https://workspace-q9i8cye0a-josh2238s-projects.vercel.app
 
@@ -201,105 +158,52 @@ tdjs-buytool/
 
 ---
 
-## ?? Troubleshooting
+## Security Notes
+
+- Credentials are only used for the purchase request
+- No credentials are stored
+- All requests go through Next.js API routes
+- HTTPS encryption when deployed
+
+---
+
+## Social Media
+
+Facebook: https://www.facebook.com/share/16TXgXRaBb/
+
+Get support, share tips, and stay updated!
+
+---
+
+## Troubleshooting
 
 ### Quick Import Not Working
-- Make sure you're using the format: `email|password`
+- Use format: `email|password`
 - One account per line
-- No extra spaces or special characters
-
-### Build Fails on Vercel
-- Make sure all dependencies are in `package.json`
-- Check that TypeScript has no errors: `npm run build` locally
+- No extra spaces
 
 ### API Returns Error
-- Verify your account credentials are correct
-- Make sure you created an account on the service (Vsphone/Vmos)
-- Check internet connectivity
-
-### Styling Issues
-- Clear your browser cache
-- Try a different browser
-- Make sure JavaScript is enabled
+- Verify credentials are correct
+- Check if accounts exist on Vsphone/Vmos
+- Try again if server is busy
 
 ---
 
-## ?? API Reference
-
-### POST `/api/buy-cloud-phone`
-
-**Request Body:**
-```json
-{
-  "service": "Vsphone" | "Vmos",
-  "accounts": [
-    {
-      "account": "email@example.com",
-      "password": "password123"
-    }
-  ]
-}
-```
-
-**Response (Success):**
-```json
-{
-  "success": true,
-  "message": "Cloud phone purchased successfully!",
-  "data": { ... }
-}
-```
-
-**Response (Error):**
-```json
-{
-  "success": false,
-  "message": "Error description"
-}
-```
-
----
-
-## ?? Social Media
-
-Connect with us on Facebook: [TdjsBuytool Community](https://www.facebook.com/share/16TXgXRaBb/)
-
-Get support, share tips, and stay updated with the latest features!
-
----
-
-## ?? Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
----
-
-## ?? License
+## License
 
 This project is open source and available under the MIT License.
 
 ---
 
-## ?? Support
+## Credits
 
-If you encounter any issues or have questions:
-1. Check the Troubleshooting section above
-2. Make sure you've created accounts on Vsphone/Vmos before using the tool
-3. Verify your credentials are correct
-4. Visit our Facebook page for community support
+Built with Next.js, TypeScript, and Tailwind CSS.
+
+**? 2025 TdjsBuytool - Help for trial abusers to purchase cloud phone trials!**
 
 ---
 
-## ?? Credits
-
-Built with ?? using Next.js, TypeScript, and Tailwind CSS.
-
-**Enjoy automating your cloud phone purchases with TdjsBuytool!** ??
-
----
-
-## ?? Quick Links
+## Quick Links
 
 - **Live Site:** https://workspace-q9i8cye0a-josh2238s-projects.vercel.app
 - **Facebook:** https://www.facebook.com/share/16TXgXRaBb/
-- **Vercel Dashboard:** https://vercel.com/josh2238s-projects/workspace
