@@ -1,6 +1,6 @@
 # ?? TdjsBuytool - Cloud Phone Purchase Automation
 
-A modern, beautiful web application to automate cloud phone purchases from meows.io.vn. Built with Next.js, TypeScript, and Tailwind CSS.
+A modern, powerful web application to automate cloud phone purchases. Built with Next.js, TypeScript, and Tailwind CSS featuring an ultra-modern dark UI.
 
 ![TdjsBuytool Banner](https://img.shields.io/badge/TdjsBuytool-Cloud%20Phone%20Automation-blue?style=for-the-badge)
 
@@ -8,10 +8,13 @@ A modern, beautiful web application to automate cloud phone purchases from meows
 
 ## ? Features
 
-- ?? **Modern UI** - Beautiful, responsive design with gradient backgrounds
+- ?? **Ultra-Modern Dark UI** - Stunning dark theme with neon gradients and glass morphism effects
+- ? **Quick Import** - Paste accounts in `email|password` format for instant parsing
 - ?? **Multi-Account Support** - Purchase cloud phones for multiple accounts at once
 - ?? **Two Services** - Support for both Vsphone and Vmos services
-- ? **Fast & Efficient** - Serverless API routes for optimal performance
+- ?? **How It Works Tab** - Educational section explaining the automation process
+- ?? **Social Integration** - Direct Facebook link for community support
+- ?? **Bulk Processing** - Handle multiple accounts simultaneously with ease
 - ?? **Vercel Ready** - One-click deployment to Vercel
 
 ---
@@ -36,31 +39,21 @@ Before using TdjsBuytool, you **MUST** create accounts on the service you want t
 
 ## ?? Quick Start
 
-### Option 1: Deploy to Vercel (Recommended)
+### Deploy to Vercel (Recommended)
 
-The easiest way to get started is to deploy directly to Vercel:
-
-1. **Fork or Clone this repository**
+1. **Install dependencies:**
    ```bash
-   git clone <your-repo-url>
-   cd tdjs-buytool
+   npm install
    ```
 
-2. **Push to your GitHub repository**
+2. **Deploy to Vercel:**
    ```bash
-   git remote add origin <your-github-repo-url>
-   git push -u origin main
+   vercel --prod
    ```
 
-3. **Deploy to Vercel**
-   - Go to [vercel.com](https://vercel.com)
-   - Click "New Project"
-   - Import your GitHub repository
-   - Vercel will automatically detect Next.js and configure everything
-   - Click "Deploy"
-   - Your app will be live in minutes! ??
+3. **Your app is live!** Share the URL with your users.
 
-### Option 2: Run Locally
+### Run Locally
 
 1. **Install Dependencies**
    ```bash
@@ -74,46 +67,76 @@ The easiest way to get started is to deploy directly to Vercel:
 
 3. **Open in Browser**
    - Navigate to `http://localhost:3000`
-   - You should see the TdjsBuytool interface
-
-4. **Build for Production** (Optional)
-   ```bash
-   npm run build
-   npm start
-   ```
 
 ---
 
 ## ?? How to Use
 
-### Step 1: Access the Application
-- If deployed on Vercel: Visit your Vercel deployment URL
-- If running locally: Navigate to `http://localhost:3000`
+### Method 1: Quick Import (Recommended) ??
 
-### Step 2: Select Your Service
-- Choose between **Vsphone** or **Vmos** by clicking the appropriate button
+This is the easiest and fastest way to add multiple accounts!
 
-### Step 3: Enter Account Credentials
-- Enter your account email/username
-- Enter your account password
-- Click "Add Another Account" if you want to purchase for multiple accounts
+1. **Copy your accounts** in this format (one per line):
+   ```
+   email1@example.com|password123
+   email2@example.com|password456
+   email3@example.com|password789
+   ```
 
-### Step 4: Purchase
-- Click "Purchase Cloud Phone" button
-- Wait for the process to complete
-- You'll see a success or error message
+2. **Paste into the "Quick Import" box** on the left side
+
+3. **Click "Parse Accounts"** - All accounts will be automatically split and loaded into the form!
+
+4. **Select your service** (Vsphone or Vmos)
+
+5. **Click "Purchase Cloud Phone"** and wait for confirmation
+
+### Method 2: Manual Entry
+
+1. **Select Your Service**
+   - Choose between **Vsphone** or **Vmos**
+
+2. **Enter Account Credentials**
+   - Enter email/username and password manually
+   - Click "Add Another Account" for multiple accounts
+
+3. **Purchase**
+   - Click "Purchase Cloud Phone" button
+   - Wait for success confirmation
 
 ### Example Usage
 
-**For Vsphone:**
-- Service: `Vsphone`
+**Quick Import Format:**
+```
+byvikete@forexzig.com|0909pp09
+another@example.com|password123
+user3@example.com|mypass789
+```
+
+**Manual Entry:**
+- Service: `Vsphone` or `Vmos`
 - Account: `your-email@example.com`
 - Password: `your-password`
 
-**For Vmos:**
-- Service: `Vmos`
-- Account: `your-email@example.com`
-- Password: `your-password`
+---
+
+## ?? New Features Explained
+
+### Quick Import Feature
+The quick import feature allows you to paste multiple accounts at once using the format `email|password`. Simply:
+1. Copy your account list
+2. Paste into the Quick Import textarea
+3. Click "Parse Accounts"
+4. All accounts are instantly loaded!
+
+### How It Works Tab
+Learn about the automation technology behind TdjsBuytool:
+- Advanced authentication system
+- Intelligent request processing
+- Seamless service integration
+- Real-time status updates
+
+This educational section helps users understand the power of the automation without technical jargon.
 
 ---
 
@@ -121,7 +144,7 @@ The easiest way to get started is to deploy directly to Vercel:
 
 - **Framework:** Next.js 14
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS
+- **Styling:** Tailwind CSS (Dark Theme with Neon Accents)
 - **API:** Next.js API Routes
 - **Deployment:** Vercel
 
@@ -135,9 +158,9 @@ tdjs-buytool/
 ?   ??? api/
 ?   ?   ??? buy-cloud-phone.ts    # API endpoint for purchases
 ?   ??? _app.tsx                   # App wrapper
-?   ??? index.tsx                  # Main page
+?   ??? index.tsx                  # Main page with tabs
 ??? styles/
-?   ??? globals.css                # Global styles
+?   ??? globals.css                # Global styles with dark theme
 ??? public/                        # Static assets
 ??? package.json                   # Dependencies
 ??? tsconfig.json                  # TypeScript config
@@ -149,47 +172,41 @@ tdjs-buytool/
 
 ---
 
+## ?? Design Features
+
+- **Dark Theme** - Easy on the eyes with a professional look
+- **Neon Gradients** - Cyan, blue, purple, and pink accents
+- **Glass Morphism** - Modern frosted glass effects
+- **Smooth Animations** - Hover effects and transitions
+- **Responsive Design** - Works perfectly on all devices
+- **Tab Navigation** - Easy switching between Purchase and How It Works
+
+---
+
 ## ?? Security Notes
 
 - Never commit your actual account credentials to the repository
 - The application doesn't store any credentials - they're only used for the API call
 - All requests are made server-side through the Next.js API route
 - Credentials are transmitted securely via HTTPS when deployed
+- The quick import feature processes data client-side only
 
 ---
 
-## ?? Deployment Guide (Detailed)
+## ?? Current Deployment
 
-### Deploy to Vercel
+**Live URL:** https://workspace-q9i8cye0a-josh2238s-projects.vercel.app
 
-1. **Create a Vercel Account**
-   - Go to [vercel.com](https://vercel.com)
-   - Sign up with GitHub, GitLab, or Bitbucket
-
-2. **Import Your Project**
-   - Click "Add New..." ? "Project"
-   - Select your repository
-   - Vercel will automatically detect Next.js
-
-3. **Configure (Optional)**
-   - The default settings work perfectly
-   - No environment variables needed
-   - Just click "Deploy"
-
-4. **Access Your App**
-   - Once deployed, you'll get a URL like `https://your-app.vercel.app`
-   - Share this URL with anyone who needs to use the tool
-
-### Custom Domain (Optional)
-
-1. In Vercel dashboard, go to your project
-2. Click "Settings" ? "Domains"
-3. Add your custom domain
-4. Follow the DNS configuration instructions
+**Vercel Dashboard:** https://vercel.com/josh2238s-projects/workspace
 
 ---
 
 ## ?? Troubleshooting
+
+### Quick Import Not Working
+- Make sure you're using the format: `email|password`
+- One account per line
+- No extra spaces or special characters
 
 ### Build Fails on Vercel
 - Make sure all dependencies are in `package.json`
@@ -198,12 +215,12 @@ tdjs-buytool/
 ### API Returns Error
 - Verify your account credentials are correct
 - Make sure you created an account on the service (Vsphone/Vmos)
-- Check that meows.io.vn is accessible
+- Check internet connectivity
 
 ### Styling Issues
 - Clear your browser cache
-- Make sure Tailwind CSS is properly configured
-- Run `npm install` to ensure all dependencies are installed
+- Try a different browser
+- Make sure JavaScript is enabled
 
 ---
 
@@ -243,6 +260,14 @@ tdjs-buytool/
 
 ---
 
+## ?? Social Media
+
+Connect with us on Facebook: [TdjsBuytool Community](https://www.facebook.com/share/16TXgXRaBb/)
+
+Get support, share tips, and stay updated with the latest features!
+
+---
+
 ## ?? Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -261,6 +286,7 @@ If you encounter any issues or have questions:
 1. Check the Troubleshooting section above
 2. Make sure you've created accounts on Vsphone/Vmos before using the tool
 3. Verify your credentials are correct
+4. Visit our Facebook page for community support
 
 ---
 
@@ -269,3 +295,11 @@ If you encounter any issues or have questions:
 Built with ?? using Next.js, TypeScript, and Tailwind CSS.
 
 **Enjoy automating your cloud phone purchases with TdjsBuytool!** ??
+
+---
+
+## ?? Quick Links
+
+- **Live Site:** https://workspace-q9i8cye0a-josh2238s-projects.vercel.app
+- **Facebook:** https://www.facebook.com/share/16TXgXRaBb/
+- **Vercel Dashboard:** https://vercel.com/josh2238s-projects/workspace
