@@ -18,15 +18,15 @@ type ServiceOption = {
 const services: ServiceOption[] = [
   {
     id: "Vsphone",
-    label: "TDJS Virtual Smartphone",
-    headline: "Always-on Android automation tuned for reliability.",
-    bullet: "Latency-optimised nodes across 8 regions.",
+    label: "Remote Diagnostic Phone",
+    headline: "Perfect for quick customer callbacks and on-the-spot troubleshooting.",
+    bullet: "We host, manage, and refresh each device for you.",
   },
   {
     id: "Vmos",
-    label: "TDJS VMOS Enterprise",
-    headline: "Extended runtime with premium compute and storage tiers.",
-    bullet: "Dedicated snapshots and compliance logging ready to export.",
+    label: "Virtual Service Tablet",
+    headline: "A full virtual workstation for paperwork, photos, and longer projects.",
+    bullet: "Great for insurance reports, inspection notes, and live support.",
   },
 ];
 
@@ -104,13 +104,13 @@ export function OrderForm() {
 
   return (
     <div className="relative isolate overflow-hidden rounded-3xl border border-white/10 bg-slate-900/70 p-6 shadow-2xl shadow-sky-900/20 backdrop-blur lg:p-8">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(148,163,255,0.18),_transparent_55%)]" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.18),_transparent_55%)]" />
 
       <header className="space-y-1">
         <p className="text-xs font-semibold uppercase tracking-[0.35em] text-sky-300/90">
-          Instant Provisioning
+          Remote device request
         </p>
-        <h2 className="text-2xl font-semibold text-slate-50">Launch a device in under a minute.</h2>
+        <h2 className="text-2xl font-semibold text-slate-50">Request a TDJS helper device.</h2>
         {selectedService ? (
           <p className="text-sm text-slate-300/90">
             {selectedService.headline}
@@ -124,7 +124,7 @@ export function OrderForm() {
       <form className="mt-6 space-y-6" onSubmit={handleSubmit}>
         <div className="space-y-4">
           <label className="block text-sm font-medium text-slate-200" htmlFor="service">
-            Choose workflow
+            Pick what you need
           </label>
           <div className="grid gap-3 sm:grid-cols-2">
             {services.map((serviceOption) => {
@@ -166,13 +166,13 @@ export function OrderForm() {
                 setFormState((prev) => ({ ...prev, account: event.target.value }));
               }}
               className="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 shadow-inner shadow-black/40 transition focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
-              placeholder="operations@yourdomain.com"
+              placeholder="service@tdjsautos.com"
             />
           </div>
 
           <div className="space-y-2">
             <label className="block text-sm font-medium text-slate-200" htmlFor="password">
-              Secure passphrase
+              Preferred PIN or password
             </label>
             <input
               id="password"
@@ -209,7 +209,7 @@ export function OrderForm() {
                 setFormState((prev) => ({ ...prev, memo: event.target.value }));
               }}
               className="w-full rounded-xl border border-white/10 bg-slate-950/70 px-4 py-3 text-sm text-slate-100 shadow-inner shadow-black/40 transition focus:border-sky-400/60 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
-              placeholder="Example: Pin this device to the Pacific cluster."
+              placeholder="Example: Need it for Saturday brake clinic."
             />
           </div>
         </div>
@@ -219,7 +219,7 @@ export function OrderForm() {
           disabled={isSubmitting}
           className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-sky-400/90 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-200 focus:ring-offset-2 focus:ring-offset-slate-950 disabled:cursor-not-allowed disabled:opacity-80"
         >
-          {isSubmitting ? "Orchestrating..." : "Schedule activation"}
+          {isSubmitting ? "Sending request..." : "Submit request"}
         </button>
       </form>
 
