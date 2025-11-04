@@ -1,8 +1,6 @@
-# 🚀 NGL Mass Sender - TURBO EDITION
+# 🎯 NGL Mass Sender - Web Edition
 
-A modern, **multi-threaded** web application with **proxy support** for sending anonymous questions to multiple NGL users. Built with Flask, Socket.IO, and a gorgeous gradient UI.
-
-> **⚡ NEW:** Multi-threading (3-10x faster) • Full proxy rotation • Advanced stats • Proxy testing • Export logs
+A modern, beautiful web application for sending anonymous questions to multiple NGL users in rotation. Built with Flask, Socket.IO, and a sleek gradient UI.
 
 ![Status](https://img.shields.io/badge/status-active-success)
 ![Python](https://img.shields.io/badge/python-3.8+-blue)
@@ -10,30 +8,17 @@ A modern, **multi-threaded** web application with **proxy support** for sending 
 
 ## ✨ Features
 
-### 🚀 Performance
-- ⚡ **Multi-Threading** - 1-10 concurrent threads (3-10x faster!)
-- 🔒 **Proxy Support** - HTTP/HTTPS/SOCKS5 with auto-rotation
-- 🧪 **Proxy Testing** - Test all proxies with one click
-- 📈 **60-100+ msg/min** in turbo mode (vs ~10 in old version)
-
-### 🎨 Interface
-- 🌐 **Modern Web UI** - Beautiful gradient design with real-time updates
-- 📊 **Advanced Stats** - Messages/min, success rates, proxy performance
-- 💾 **Export Logs** - Download activity logs as JSON
-- 📱 **Fully Responsive** - Works perfectly on mobile & desktop
-
-### 🎯 Intelligence
-- 🔄 **Round-Robin** - Questions rotate through all targets evenly
-- 💬 **25+ Default Questions** - Smart random selection
-- 🎲 **Random User Agents** - Mimics real Android devices
+- 🌐 **Modern Web Interface** - Beautiful gradient UI with real-time updates
+- 🔄 **Round-Robin Distribution** - Questions rotate through all targets evenly
+- 📊 **Live Statistics** - Track sent/failed messages in real-time
+- 💬 **Custom Questions** - Add your own questions or use built-in defaults
+- ⚙️ **Configurable Delays** - Adjust timing to avoid rate limits
+- 🔒 **Proxy Support** - Optional HTTP/HTTPS/SOCKS5 proxies
 - 📁 **Bulk Import** - Upload target lists from files
-- 🔍 **Duplicate Removal** - Auto-removes duplicate targets
-
-### ⚙️ Control
-- 🧵 **Thread Control** - Adjust 1-10 threads on the fly
-- ⏱️ **Custom Delays** - 0.5s to 30s (vs 6s minimum before)
-- 🔴 **Live Monitoring** - See every action in real-time
-- 📋 **Activity Log** - 500+ entries with timestamps
+- 📱 **Responsive Design** - Works on desktop and mobile
+- 🔴 **Live Activity Log** - See every action as it happens
+- 🎲 **Random User Agents** - Mimics real mobile devices
+- ❓ **Built-in Help** - Tab with full explanations and best settings
 
 ## 🚀 Quick Start
 
@@ -70,23 +55,22 @@ http://localhost:5000
 - Leave empty to use 20+ built-in questions
 - Click "Update Questions" to save
 
-### 3. Configure Proxies (Optional but Recommended)
-- Enter proxies in the "Proxies" section
-- One proxy per line (HTTP/HTTPS/SOCKS5)
-- Click "Test All" to verify which proxies work
-- Enable/disable proxy rotation with checkbox
-- **Use proxies for high-speed sending!**
+### 3. Adjust Settings (Optional)
+- Set minimum and maximum delay between sends
+- Default: 6-15 seconds (recommended to avoid rate limits)
+- Add proxies if desired (one per line)
+- Click "Save Settings" to apply
 
-### 4. Adjust Settings
-- **Threads**: 1-10 (3 recommended, 10 for turbo mode)
-- **Min/Max Delay**: 0.5-30s (3-8s recommended)
-- Click "Save Settings"
+### 4. Check the Help Tab
+- Click "❓ How It Works" tab
+- Learn about round-robin distribution
+- See recommended settings
+- Get pro tips for best results
 
 ### 5. Start Sending
 - Click the "Start Sending" button
 - Watch the live log for activity
 - Statistics update in real-time
-- Monitor messages/minute
 - Click "Stop Sending" to pause
 
 ## 🎨 Features Explained
@@ -228,37 +212,22 @@ Improvements welcome! Some ideas:
 - Message templates with variables
 - Statistics export
 
-## ⚡ TURBO Improvements Over Original Script
+## ⚡ Improvements Over Original Script
 
-1. ✅ **Multi-threading** - 3-10x faster with concurrent threads
-2. ✅ **Full proxy support** - HTTP/HTTPS/SOCKS5 rotation
-3. ✅ **Proxy testing** - Verify proxies before use
-4. ✅ **Advanced stats** - Messages/min, proxy performance, etc.
-5. ✅ **Export logs** - Download as JSON
-6. ✅ **Beautiful web UI** - No command line needed
-7. ✅ **Real-time dashboard** - Live WebSocket updates
-8. ✅ **Bulk import** - Upload target files
-9. ✅ **25+ questions** - More variety
-10. ✅ **0.5s min delay** - Way faster than 6s
-11. ✅ **Mobile responsive** - Works on phone
-12. ✅ **Thread-safe** - Proper concurrent handling
-13. ✅ **Queue system** - Efficient task distribution
-14. ✅ **Per-proxy stats** - Track each proxy's performance
-15. ✅ **500+ log entries** - Extensive history
-
-## 📊 Performance Comparison
-
-| Metric | Original Script | TURBO Edition |
-|--------|----------------|---------------|
-| Speed | ~5-10 msg/min | ~60-100 msg/min |
-| Threads | 1 | 1-10 (configurable) |
-| Proxies | Basic list | Advanced rotation + testing |
-| Min Delay | 6 seconds | 0.5 seconds |
-| Interface | Command line | Modern web UI |
-| Stats | Basic counter | Advanced analytics |
-| Logs | Console only | Exportable JSON |
-| Mobile | ❌ | ✅ |
-| Real-time | ❌ | ✅ WebSocket |
+1. ✅ Beautiful web interface (no command line needed)
+2. ✅ Real-time visual feedback via WebSocket
+3. ✅ Easy target/question management
+4. ✅ Live statistics dashboard
+5. ✅ Mobile-friendly responsive design
+6. ✅ Activity logging with timestamps
+7. ✅ More default questions (20 vs 10)
+8. ✅ Better error handling
+9. ✅ Modern UI/UX with animations
+10. ✅ Bulk file import for targets
+11. ✅ Built-in help tab with guides
+12. ✅ Proxy support (optional)
+13. ✅ Round-robin distribution
+14. ✅ Configurable delays
 
 ---
 
