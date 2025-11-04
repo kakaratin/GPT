@@ -1,0 +1,26 @@
+# Example Proxy List for NGL Mass Sender
+# One proxy per line
+# Supported formats:
+#   - http://ip:port
+#   - https://ip:port
+#   - socks5://ip:port
+#   - http://username:password@ip:port
+
+# Example proxies (replace with your own):
+# http://123.45.67.89:8080
+# https://98.76.54.32:3128
+# socks5://11.22.33.44:1080
+# http://user:pass@proxy.example.com:8080
+
+# Free proxy sources (check these websites):
+# - https://free-proxy-list.net/
+# - https://www.proxy-list.download/
+# - https://www.sslproxies.org/
+# - https://spys.one/en/
+
+# Tips:
+# 1. Test proxies before using (use the Test button in UI)
+# 2. Remove dead proxies to improve performance
+# 3. Use authenticated proxies for better reliability
+# 4. Rotate proxies to avoid IP bans
+# 5. Premium proxies work much better than free ones
