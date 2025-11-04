@@ -358,7 +358,15 @@
                 <h2>👥 Target Users</h2>
                 <textarea id="targetsInput" placeholder="Enter NGL usernames (one per line)&#10;e.g.:&#10;username1&#10;username2&#10;ngl.link/username3"></textarea>
                 <div class="help-text">💡 Enter usernames or full NGL links, one per line</div>
-                <button class="secondary" onclick="updateTargets()">Update Targets</button>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
+                    <button class="secondary" onclick="updateTargets()">Update Targets</button>
+                    <button class="secondary" onclick="document.getElementById('fileInput').click()">
+                        📁 Import File
+                    </button>
+                </div>
+                <input type="file" id="fileInput" accept=".txt" style="display: none;" onchange="importTargetsFile(event)">
+                
                 <div class="tags" id="targetTags"></div>
             </div>
 
@@ -488,7 +496,31 @@
             const data = await response.json();
             displayTargetTags(data.targets);
             document.getElementById('targetCount').textContent = data.targets.length;
-            addLog(`Updated ${data.targets.length} targets`, 'info');
+            addLog(`✅ Updated ${data.targets.length} targets`, 'info');
+        }
+
+        function importTargetsFile(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const content = e.target.result;
+                const currentTargets = document.getElementById('targetsInput').value;
+                
+                // Append to existing targets
+                if (currentTargets.trim()) {
+                    document.getElementById('targetsInput').value = currentTargets + '\n' + content;
+                } else {
+                    document.getElementById('targetsInput').value = content;
+                }
+                
+                addLog(`📁 Imported targets from ${file.name}`, 'info');
+                
+                // Auto-update
+                updateTargets();
+            };
+            reader.readAsText(file);
         }
 
         function displayTargetTags(targets) {
