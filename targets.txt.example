@@ -1,0 +1,12 @@
+# Example targets file
+# Add one NGL username per line
+# You can use:
+#   - Just the username: johndoe
+#   - Full link: ngl.link/johndoe
+#   - With @ symbol: @johndoe
+
+username1
+username2
+username3
+ngl.link/username4
+@username5
