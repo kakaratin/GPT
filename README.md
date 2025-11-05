@@ -10,6 +10,7 @@ A Telegram bot for creating temporary email addresses and automatically purchasi
 - 🔄 **Auto Purchase**: One-click device purchase with your temporary email
 - 📬 **Inbox Management**: View full message contents
 - 🎯 **Service Selection**: Choose between Vsphone and Vmos
+- 💾 **Auto-Save Sessions**: Automatically saves sessions to JSON file (no database needed!)
 
 ## Installation
 
@@ -84,6 +85,28 @@ The bot now returns English responses:
   "queuePosition": 1
 }
 ```
+
+## Data Persistence
+
+The bot automatically saves user sessions to a `sessions.json` file. This means:
+- No database setup required! 
+- Sessions persist across bot restarts
+- Simple JSON file storage
+- Automatic save on create/delete operations
+
+The `sessions.json` file is created automatically and is excluded from git via `.gitignore`.
+
+## Code Structure
+
+The code is organized into clear sections:
+- **Configuration** - All settings in one place
+- **Session Management** - Automatic JSON file storage
+- **Mail.tm API Functions** - Email operations
+- **Cloud Phone API Functions** - Device purchase operations
+- **Utility Functions** - Helper functions
+- **Bot Command Handlers** - All bot commands
+- **Callback Query Handler** - Button interactions
+- **Startup** - Initialization and session loading
 
 ## Branding
 

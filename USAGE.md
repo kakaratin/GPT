@@ -32,6 +32,13 @@ Both services use the same API but provide different device types.
 - Random usernames and domains
 - Built-in password: `TdjsCloudPhone0909`
 
+### 💾 Automatic Session Persistence
+
+- All user sessions are automatically saved to `sessions.json`
+- No database setup required!
+- Sessions persist across bot restarts
+- Automatic save on create/delete operations
+
 ### 🎯 Device Purchase Flow
 
 1. Create a temporary email with `/create`
@@ -122,6 +129,16 @@ Bot: ⏳ Requesting 📱 Vsphone cloud phone device...
      Your device will be ready shortly! 🚀
 ```
 
+## Code Quality Improvements
+
+The bot features a clean, professional code structure:
+
+- **Clear Organization**: Code divided into logical sections
+- **Configuration Centralized**: All settings in one `CONFIG` object
+- **Clean Functions**: Well-named, single-purpose functions
+- **Consistent Style**: Modern ES6+ syntax throughout
+- **Auto-Save**: JSON file storage with automatic persistence
+
 ## Troubleshooting
 
 ### Bot Not Responding
@@ -137,6 +154,11 @@ Bot: ⏳ Requesting 📱 Vsphone cloud phone device...
 - Email might already be used
 - API endpoint might be rate-limited
 - Try creating a new email and purchase again
+
+### Sessions Not Persisting
+- Check if `sessions.json` file has write permissions
+- Ensure the bot has access to the working directory
+- File is created automatically on first session save
 
 ## Security Notes
 
