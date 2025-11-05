@@ -1,0 +1,26 @@
+{
+  "name": "tdjs-auto-mail-bot",
+  "version": "1.0.0",
+  "description": "Tdjs-Auto Mail Bot - Temporary email and cloud phone device automation",
+  "main": "telegram-mailtm-bot.js",
+  "scripts": {
+    "start": "node telegram-mailtm-bot.js",
+    "dev": "node telegram-mailtm-bot.js"
+  },
+  "keywords": [
+    "telegram",
+    "bot",
+    "mail",
+    "temporary-email",
+    "cloud-phone",
+    "vsphone",
+    "vmos",
+    "automation"
+  ],
+  "author": "Tdjs-Auto",
+  "license": "MIT",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.64.0",
+    "axios": "^1.6.0"
+  }
+}
