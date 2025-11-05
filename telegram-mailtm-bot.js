@@ -1,18 +1,28 @@
 const TelegramBot = require('node-telegram-bot-api');
 const axios = require('axios');
+const fs = require('fs').promises;
+const path = require('path');
 
-const BOT_TOKEN = '7677458154:AAF2FZKXwUyGmAX_4CMdnqtWdbY6sDzA3-c';
-const MAILTM_API = 'https://api.mail.tm';
-const PASSWORD = 'TdjsCloudPhone0909';
-const CLOUD_PHONE_API = 'https://meows.io.vn/api/buy-cloud-phone';
+// ============================================
+// CONFIGURATION
+// ============================================
+const CONFIG = {
+  BOT_TOKEN: '7677458154:AAF2FZKXwUyGmAX_4CMdnqtWdbY6sDzA3-c',
+  MAILTM_API: 'https://api.mail.tm',
+  PASSWORD: 'TdjsCloudPhone0909',
+  CLOUD_PHONE_API: 'https://meows.io.vn/api/buy-cloud-phone',
+  SESSIONS_FILE: path.join(__dirname, 'sessions.json'),
+  MESSAGE_MAX_LENGTH: 4096,
+  MESSAGE_DELAY: 500
+};
 
-const bot = new TelegramBot(BOT_TOKEN, { polling: true });
-
-// Store user sessions (email and token)
+const bot = new TelegramBot(CONFIG.BOT_TOKEN, { polling: true });
 const userSessions = new Map();
 
-// Random user agents
-const userAgents = [
+// ============================================
+// USER AGENT POOL
+// ============================================
+const USER_AGENTS = [
   'Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36',
   'Mozilla/5.0 (Linux; Android 11; SM-G991B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36',
   'Mozilla/5.0 (Linux; Android 12; Pixel 6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Mobile Safari/537.36',
@@ -23,100 +33,126 @@ const userAgents = [
 ];
 
 function getRandomUserAgent() {
-  return userAgents[Math.floor(Math.random() * userAgents.length)];
+  return USER_AGENTS[Math.floor(Math.random() * USER_AGENTS.length)];
 }
 
-// Helper function to get available domains
+// ============================================
+// SESSION MANAGEMENT (JSON FILE STORAGE)
+// ============================================
+async function loadSessions() {
+  try {
+    const data = await fs.readFile(CONFIG.SESSIONS_FILE, 'utf8');
+    const sessions = JSON.parse(data);
+    Object.entries(sessions).forEach(([chatId, session]) => {
+      userSessions.set(parseInt(chatId), session);
+    });
+    console.log(`✅ Loaded ${userSessions.size} sessions from file`);
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      console.log('📝 No existing sessions file found, starting fresh');
+    } else {
+      console.error('⚠️  Error loading sessions:', error.message);
+    }
+  }
+}
+
+async function saveSessions() {
+  try {
+    const sessionsObj = {};
+    userSessions.forEach((session, chatId) => {
+      sessionsObj[chatId] = session;
+    });
+    await fs.writeFile(CONFIG.SESSIONS_FILE, JSON.stringify(sessionsObj, null, 2), 'utf8');
+  } catch (error) {
+    console.error('⚠️  Error saving sessions:', error.message);
+  }
+}
+
+// ============================================
+// MAIL.TM API FUNCTIONS
+// ============================================
 async function getDomains() {
   try {
-    const response = await axios.get(`${MAILTM_API}/domains`);
+    const response = await axios.get(`${CONFIG.MAILTM_API}/domains`);
     return response.data['hydra:member'];
   } catch (error) {
-    console.error('Error fetching domains:', error.message);
+    console.error('❌ Error fetching domains:', error.message);
     return [];
   }
 }
 
-// Helper function to create account
 async function createAccount(address) {
   try {
-    const response = await axios.post(`${MAILTM_API}/accounts`, {
-      address: address,
-      password: PASSWORD
+    const response = await axios.post(`${CONFIG.MAILTM_API}/accounts`, {
+      address,
+      password: CONFIG.PASSWORD
     });
     return response.data;
   } catch (error) {
-    console.error('Error creating account:', error.response?.data || error.message);
+    console.error('❌ Error creating account:', error.response?.data || error.message);
     throw error;
   }
 }
 
-// Helper function to get auth token
 async function getToken(address) {
   try {
-    const response = await axios.post(`${MAILTM_API}/token`, {
-      address: address,
-      password: PASSWORD
+    const response = await axios.post(`${CONFIG.MAILTM_API}/token`, {
+      address,
+      password: CONFIG.PASSWORD
     });
     return response.data.token;
   } catch (error) {
-    console.error('Error getting token:', error.message);
+    console.error('❌ Error getting token:', error.message);
     throw error;
   }
 }
 
-// Helper function to get messages with full content
 async function getMessages(token) {
   try {
-    const response = await axios.get(`${MAILTM_API}/messages`, {
+    const response = await axios.get(`${CONFIG.MAILTM_API}/messages`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     return response.data['hydra:member'];
   } catch (error) {
-    console.error('Error fetching messages:', error.message);
+    console.error('❌ Error fetching messages:', error.message);
     return [];
   }
 }
 
-// Helper function to get full message by ID
 async function getMessage(token, messageId) {
   try {
-    const response = await axios.get(`${MAILTM_API}/messages/${messageId}`, {
+    const response = await axios.get(`${CONFIG.MAILTM_API}/messages/${messageId}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     return response.data;
   } catch (error) {
-    console.error('Error fetching message:', error.message);
+    console.error('❌ Error fetching message:', error.message);
     throw error;
   }
 }
 
-// Helper function to delete account
 async function deleteAccount(token, accountId) {
   try {
-    await axios.delete(`${MAILTM_API}/accounts/${accountId}`, {
+    await axios.delete(`${CONFIG.MAILTM_API}/accounts/${accountId}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     return true;
   } catch (error) {
-    console.error('Error deleting account:', error.message);
+    console.error('❌ Error deleting account:', error.message);
     return false;
   }
 }
 
-// Helper function to buy cloud phone
+// ============================================
+// CLOUD PHONE API FUNCTIONS
+// ============================================
 async function buyCloudPhone(email, password, service = 'Vsphone') {
   try {
     const response = await axios.post(
-      CLOUD_PHONE_API,
+      CONFIG.CLOUD_PHONE_API,
       {
-        service: service,
-        accounts: [
-          {
-            account: email,
-            password: password
-          }
-        ]
+        service,
+        accounts: [{ account: email, password }]
       },
       {
         headers: {
@@ -128,24 +164,19 @@ async function buyCloudPhone(email, password, service = 'Vsphone') {
     );
     return response.data;
   } catch (error) {
-    console.error('Error buying cloud phone:', error.response?.data || error.message);
+    console.error('❌ Error buying cloud phone:', error.response?.data || error.message);
     throw error;
   }
 }
 
-// Helper function to format response message
+// ============================================
+// UTILITY FUNCTIONS
+// ============================================
 function formatDeviceResponse(result, email, service) {
-  let statusMessage = '✅ *Successfully Purchased Device!*';
-  let emoji = '📱';
-  
-  // Handle both Vietnamese and English success messages
-  if (result.message && (result.message.includes('ĐÃ MUA ĐƯỢC MÁY') || result.success)) {
-    statusMessage = '✅ *Device Purchase Successful!*';
-  }
-  
-  if (service === 'Vmos') {
-    emoji = '🖥️';
-  }
+  const emoji = service === 'Vmos' ? '🖥️' : '📱';
+  const statusMessage = (result.message && (result.message.includes('ĐÃ MUA ĐƯỢC MÁY') || result.success))
+    ? '✅ *Device Purchase Successful!*'
+    : '✅ *Successfully Purchased Device!*';
   
   return `
 ${emoji} *Tdjs-Auto Device Manager*
@@ -153,7 +184,7 @@ ${emoji} *Tdjs-Auto Device Manager*
 ${statusMessage}
 
 📧 *Email:* \`${email}\`
-🔑 *Password:* \`${PASSWORD}\`
+🔑 *Password:* \`${CONFIG.PASSWORD}\`
 🎯 *Service:* ${service}
 📊 *Queue Position:* ${result.queuePosition || 'N/A'}
 ${result.order_id ? `🆔 *Order ID:* ${result.order_id}` : ''}
@@ -162,7 +193,32 @@ Your device will be ready shortly! 🚀
   `;
 }
 
-// Start command
+async function sendLongMessage(chatId, text, options = {}) {
+  if (text.length > CONFIG.MESSAGE_MAX_LENGTH) {
+    const chunks = text.match(new RegExp(`[\\s\\S]{1,${CONFIG.MESSAGE_MAX_LENGTH}}`, 'g'));
+    for (const chunk of chunks) {
+      await bot.sendMessage(chatId, chunk, options);
+      await new Promise(resolve => setTimeout(resolve, CONFIG.MESSAGE_DELAY));
+    }
+  } else {
+    await bot.sendMessage(chatId, text, options);
+  }
+}
+
+function getDeviceKeyboard() {
+  return {
+    inline_keyboard: [
+      [
+        { text: '📱 Get Vsphone Device', callback_data: 'get_device_vsphone' },
+        { text: '🖥️ Get Vmos Device', callback_data: 'get_device_vmos' }
+      ]
+    ]
+  };
+}
+
+// ============================================
+// BOT COMMAND HANDLERS
+// ============================================
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
   const welcomeMessage = `
@@ -182,7 +238,6 @@ Let's get started! Use /create to generate your temporary email.
   bot.sendMessage(chatId, welcomeMessage, { parse_mode: 'Markdown' });
 });
 
-// Help command
 bot.onText(/\/help/, (msg) => {
   const chatId = msg.chat.id;
   const helpMessage = `
@@ -206,7 +261,6 @@ bot.onText(/\/help/, (msg) => {
   bot.sendMessage(chatId, helpMessage, { parse_mode: 'Markdown' });
 });
 
-// Create email command
 bot.onText(/\/create/, async (msg) => {
   const chatId = msg.chat.id;
   
@@ -228,41 +282,34 @@ bot.onText(/\/create/, async (msg) => {
     
     userSessions.set(chatId, {
       email: emailAddress,
-      token: token,
-      accountId: account.id
+      token,
+      accountId: account.id,
+      createdAt: new Date().toISOString()
     });
     
-    const keyboard = {
-      inline_keyboard: [
-        [
-          { text: '📱 Get Vsphone Device', callback_data: 'get_device_vsphone' },
-          { text: '🖥️ Get Vmos Device', callback_data: 'get_device_vmos' }
-        ]
-      ]
-    };
+    await saveSessions();
     
     bot.sendMessage(chatId, `
 ✅ *Email Created Successfully!*
 
 📧 *Your Email:* \`${emailAddress}\`
-🔑 *Password:* \`${PASSWORD}\`
+🔑 *Password:* \`${CONFIG.PASSWORD}\`
 
 You can now use this email for registrations or testing.
 Use /inbox to check for new messages.
 
 Would you like to automatically get a cloud phone device?
-    `, { parse_mode: 'Markdown', reply_markup: keyboard });
+    `, { parse_mode: 'Markdown', reply_markup: getDeviceKeyboard() });
     
   } catch (error) {
     bot.sendMessage(chatId, '❌ Failed to create email. Please try again.');
   }
 });
 
-// Inbox command - shows full messages
 bot.onText(/\/inbox/, async (msg) => {
   const chatId = msg.chat.id;
-  
   const session = userSessions.get(chatId);
+  
   if (!session) {
     bot.sendMessage(chatId, '❌ You don\'t have an active email. Use /create to generate one.');
     return;
@@ -280,37 +327,25 @@ bot.onText(/\/inbox/, async (msg) => {
     
     bot.sendMessage(chatId, `📬 *Your Inbox* (${messages.length} message${messages.length > 1 ? 's' : ''})\n`, { parse_mode: 'Markdown' });
     
-    // Fetch and display each message with full content
     for (let i = 0; i < messages.length; i++) {
-      const msg = messages[i];
       try {
-        const fullMessage = await getMessage(session.token, msg.id);
+        const fullMessage = await getMessage(session.token, messages[i].id);
         const date = new Date(fullMessage.createdAt).toLocaleString();
         
-        let messageText = `━━━━━━━━━━━━━━━━━━\n`;
-        messageText += `📧 *Message ${i + 1}*\n\n`;
-        messageText += `*From:* ${fullMessage.from.address}\n`;
-        messageText += `*To:* ${fullMessage.to[0].address}\n`;
-        messageText += `*Subject:* ${fullMessage.subject || '(No subject)'}\n`;
-        messageText += `*Date:* ${date}\n\n`;
-        messageText += `*Content:*\n${fullMessage.text || fullMessage.html || '(No content)'}`;
-        messageText += `\n━━━━━━━━━━━━━━━━━━`;
+        const messageText = `━━━━━━━━━━━━━━━━━━\n` +
+          `📧 *Message ${i + 1}*\n\n` +
+          `*From:* ${fullMessage.from.address}\n` +
+          `*To:* ${fullMessage.to[0].address}\n` +
+          `*Subject:* ${fullMessage.subject || '(No subject)'}\n` +
+          `*Date:* ${date}\n\n` +
+          `*Content:*\n${fullMessage.text || fullMessage.html || '(No content)'}` +
+          `\n━━━━━━━━━━━━━━━━━━`;
         
-        // Split message if too long
-        if (messageText.length > 4096) {
-          const chunks = messageText.match(/[\s\S]{1,4096}/g);
-          for (const chunk of chunks) {
-            await bot.sendMessage(chatId, chunk, { parse_mode: 'Markdown' });
-          }
-        } else {
-          await bot.sendMessage(chatId, messageText, { parse_mode: 'Markdown' });
-        }
-        
-        // Small delay to avoid rate limits
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await sendLongMessage(chatId, messageText, { parse_mode: 'Markdown' });
+        await new Promise(resolve => setTimeout(resolve, CONFIG.MESSAGE_DELAY));
         
       } catch (error) {
-        console.error(`Error fetching message ${msg.id}:`, error.message);
+        console.error(`❌ Error fetching message ${messages[i].id}:`, error.message);
       }
     }
     
@@ -319,25 +354,14 @@ bot.onText(/\/inbox/, async (msg) => {
   }
 });
 
-// Device command
 bot.onText(/\/device/, async (msg) => {
   const chatId = msg.chat.id;
-  
   const session = userSessions.get(chatId);
+  
   if (!session) {
     bot.sendMessage(chatId, '❌ You need to create an email first. Use /create to generate one.');
     return;
   }
-  
-  // Show device selection
-  const keyboard = {
-    inline_keyboard: [
-      [
-        { text: '📱 Vsphone', callback_data: 'get_device_vsphone' },
-        { text: '🖥️ Vmos', callback_data: 'get_device_vmos' }
-      ]
-    ]
-  };
   
   bot.sendMessage(chatId, `
 🎯 *Tdjs-Auto Device Manager*
@@ -348,14 +372,39 @@ Choose your cloud phone service:
 🖥️ *Vmos* - Virtual mobile OS
 
 📧 *Email:* \`${session.email}\`
-🔑 *Password:* \`${PASSWORD}\`
-  `, { parse_mode: 'Markdown', reply_markup: keyboard });
+🔑 *Password:* \`${CONFIG.PASSWORD}\`
+  `, { parse_mode: 'Markdown', reply_markup: getDeviceKeyboard() });
 });
 
-// Handle callback queries (button presses)
+bot.onText(/\/delete/, async (msg) => {
+  const chatId = msg.chat.id;
+  const session = userSessions.get(chatId);
+  
+  if (!session) {
+    bot.sendMessage(chatId, '❌ You don\'t have an active email to delete.');
+    return;
+  }
+  
+  try {
+    bot.sendMessage(chatId, '⏳ Deleting your email account...');
+    
+    await deleteAccount(session.token, session.accountId);
+    userSessions.delete(chatId);
+    await saveSessions();
+    
+    bot.sendMessage(chatId, '✅ Your email account has been deleted successfully!');
+    
+  } catch (error) {
+    bot.sendMessage(chatId, '❌ Failed to delete account. Please try again.');
+  }
+});
+
+// ============================================
+// CALLBACK QUERY HANDLER
+// ============================================
 bot.on('callback_query', async (callbackQuery) => {
   const chatId = callbackQuery.message.chat.id;
-  const data = callbackQuery.data;
+  const { data } = callbackQuery;
   
   if (data === 'get_device_vsphone' || data === 'get_device_vmos') {
     const session = userSessions.get(chatId);
@@ -373,14 +422,12 @@ bot.on('callback_query', async (callbackQuery) => {
     try {
       bot.sendMessage(chatId, `⏳ Requesting ${emoji} ${service} cloud phone device...`);
       
-      const result = await buyCloudPhone(session.email, PASSWORD, service);
+      const result = await buyCloudPhone(session.email, CONFIG.PASSWORD, service);
       
-      // Format the response message with proper English translation
       const formattedMessage = formatDeviceResponse(result, session.email, service);
-      bot.sendMessage(chatId, formattedMessage, { parse_mode: 'Markdown' });
+      await bot.sendMessage(chatId, formattedMessage, { parse_mode: 'Markdown' });
       
-      // Also show the raw response
-      bot.sendMessage(chatId, `
+      await bot.sendMessage(chatId, `
 📋 *Raw API Response:*
 \`\`\`json
 ${JSON.stringify(result, null, 2)}
@@ -393,27 +440,11 @@ ${JSON.stringify(result, null, 2)}
   }
 });
 
-// Delete email command
-bot.onText(/\/delete/, async (msg) => {
-  const chatId = msg.chat.id;
-  
-  const session = userSessions.get(chatId);
-  if (!session) {
-    bot.sendMessage(chatId, '❌ You don\'t have an active email to delete.');
-    return;
-  }
-  
-  try {
-    bot.sendMessage(chatId, '⏳ Deleting your email account...');
-    
-    await deleteAccount(session.token, session.accountId);
-    userSessions.delete(chatId);
-    
-    bot.sendMessage(chatId, '✅ Your email account has been deleted successfully!');
-    
-  } catch (error) {
-    bot.sendMessage(chatId, '❌ Failed to delete account. Please try again.');
-  }
-});
-
-console.log('🤖 Tdjs-Auto Bot is running...');
+// ============================================
+// STARTUP
+// ============================================
+(async () => {
+  console.log('🚀 Starting Tdjs-Auto Bot...');
+  await loadSessions();
+  console.log('✅ Bot is ready and running!');
+})();
