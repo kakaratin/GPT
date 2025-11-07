@@ -396,38 +396,54 @@
                 this.updateStatus(`<strong>📧 Email found!</strong><br><br>Getting verification code...`, 75);
                 
                 const fullMessage = await this.mailTM.getMessage(latestMessage.id);
+                console.log('📧 Full message object:', fullMessage);
 
-                // Extract verification code - try multiple patterns
-                // Make sure we handle html properly (it might not be a string)
-                let htmlText = '';
+                // Extract ALL text from the email - KEEP IT SIMPLE
+                let emailText = '';
+                
+                // Get intro text
+                if (fullMessage.intro) {
+                    emailText += String(fullMessage.intro) + ' ';
+                }
+                
+                // Get text content
+                if (fullMessage.text) {
+                    emailText += String(fullMessage.text) + ' ';
+                }
+                
+                // Get HTML and strip tags
                 if (fullMessage.html) {
-                    if (typeof fullMessage.html === 'string') {
-                        htmlText = fullMessage.html.replace(/<[^>]*>/g, ' ');
-                    } else {
-                        htmlText = String(fullMessage.html);
+                    let htmlStr = String(fullMessage.html);
+                    if (typeof htmlStr === 'string') {
+                        emailText += htmlStr.replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ') + ' ';
                     }
                 }
                 
-                const textContent = fullMessage.text || '';
-                const subject = fullMessage.subject || '';
-                const fullText = textContent + ' ' + htmlText + ' ' + subject;
+                // Get subject
+                if (fullMessage.subject) {
+                    emailText += String(fullMessage.subject) + ' ';
+                }
 
-                console.log('Email content:', fullText);
+                console.log('📝 Email text extracted:', emailText);
 
-                const codePatterns = [
-                    /verification code[:\s]+([A-Z0-9]{4,8})/i,
-                    /code[:\s]+([A-Z0-9]{4,8})/i,
-                    /your code[:\s]+([A-Z0-9]{4,8})/i,
-                    /\b([A-Z0-9]{6})\b/,
-                    /\b([0-9]{6})\b/,
-                    /\b([0-9]{4,8})\b/,
-                    /[：:]\s*([A-Z0-9]{4,8})/i,
-                    /code[^a-z0-9]+([a-z0-9]{4,8})/i
-                ];
+                // SIMPLE APPROACH - Just find ALL numbers that look like codes
+                // Look for 4-8 digit numbers or 6 alphanumeric codes
+                const allNumbers = emailText.match(/\b\d{4,8}\b/g);
+                console.log('🔢 All numbers found:', allNumbers);
 
                 let code = null;
-                for (let pattern of codePatterns) {
-                    const match = fullText.match(pattern);
+                
+                // Try specific patterns first
+                const patterns = [
+                    /verification code[:\s]+(\d{4,8})/i,
+                    /code[:\s]+(\d{4,8})/i,
+                    /your code[:\s]+(\d{4,8})/i,
+                    /verify[:\s]+(\d{4,8})/i,
+                    /\b(\d{6})\b/,  // Most common - 6 digits
+                ];
+
+                for (let pattern of patterns) {
+                    const match = emailText.match(pattern);
                     if (match && match[1]) {
                         code = match[1];
                         console.log('✅ Code found with pattern:', pattern, '→', code);
@@ -435,61 +451,106 @@
                     }
                 }
 
+                // Fallback: Just use the first 6-digit or 4-8 digit number found
+                if (!code && allNumbers && allNumbers.length > 0) {
+                    // Prefer 6-digit codes
+                    code = allNumbers.find(n => n.length === 6) || allNumbers[0];
+                    console.log('✅ Using first number found:', code);
+                }
+
                 if (!code) {
                     // Show the email content so user can find it manually
-                    this.updateStatus(`<strong>⚠️ Couldn't extract code!</strong><br><br><strong>Subject:</strong> ${subject}<br><br><strong>Content preview:</strong><br>${text.substring(0, 200)}...<br><br>Copy the code manually bro!`, 85);
+                    this.updateStatus(`<strong>⚠️ Couldn't find code!</strong><br><br><strong>Email text:</strong><br>${emailText.substring(0, 300)}...<br><br>Copy the code manually bro!`, 85);
                     return;
                 }
 
                 // Found the code! Now try to fill it
-                this.updateStatus(`<strong>✅ Code Found: ${code}</strong><br><br>Filling it now...`, 85);
+                this.updateStatus(`<strong>✅ Code Found: ${code}</strong><br><br>Filling boxes...`, 85);
 
-                // First, try to find 6 separate input boxes (OTP style)
-                const allInputs = Array.from(document.querySelectorAll('input'));
-                const visibleInputs = allInputs.filter(input => 
-                    input.offsetParent !== null && 
-                    !input.disabled && 
-                    input.type !== 'hidden' &&
-                    input.type !== 'email' &&
-                    !input.name?.toLowerCase().includes('email') &&
-                    !input.placeholder?.toLowerCase().includes('email')
-                );
+                console.log('🔍 Looking for OTP input boxes...');
 
-                console.log('Found visible inputs:', visibleInputs.length, visibleInputs);
+                // METHOD 1: Look for OTP boxes with maxlength="1" (most common!)
+                let otpBoxes = Array.from(document.querySelectorAll('input[maxlength="1"]'));
+                console.log('Found maxlength=1 inputs:', otpBoxes.length, otpBoxes);
 
-                // Check if we have 6 boxes (or 4-8 boxes for OTP)
+                // METHOD 2: If no maxlength=1, look for visible small inputs
+                if (otpBoxes.length === 0) {
+                    const allInputs = Array.from(document.querySelectorAll('input'));
+                    otpBoxes = allInputs.filter(input => {
+                        const isVisible = input.offsetParent !== null && !input.disabled && input.type !== 'hidden';
+                        const notEmail = input.type !== 'email' && 
+                                       !input.name?.toLowerCase().includes('email') && 
+                                       !input.placeholder?.toLowerCase().includes('email');
+                        const isEmpty = !input.value || input.value.length <= 1;
+                        return isVisible && notEmail && isEmpty;
+                    });
+                    console.log('Found visible empty inputs:', otpBoxes.length, otpBoxes);
+                }
+
+                // Check if we have OTP boxes (usually 4-6-8 boxes)
                 let filled = false;
-                if (visibleInputs.length >= 4 && visibleInputs.length <= 8 && code.length >= visibleInputs.length) {
-                    // Likely OTP boxes! Fill each one with a digit
-                    console.log('🎯 Detected OTP boxes! Filling individually...');
+                if (otpBoxes.length >= 4 && otpBoxes.length <= 8 && code.length >= otpBoxes.length) {
+                    console.log('🎯 DETECTED OTP BOXES! Filling each one...');
                     const codeDigits = code.split('');
                     
-                    for (let i = 0; i < Math.min(visibleInputs.length, codeDigits.length); i++) {
-                        const box = visibleInputs[i];
+                    for (let i = 0; i < Math.min(otpBoxes.length, codeDigits.length); i++) {
+                        const box = otpBoxes[i];
                         const digit = codeDigits[i];
                         
-                        box.value = digit;
+                        // Clear it first
+                        box.value = '';
+                        
+                        // Focus it
                         box.focus();
                         
-                        // Trigger ALL events for each box
-                        box.dispatchEvent(new Event('input', { bubbles: true }));
-                        box.dispatchEvent(new Event('change', { bubbles: true }));
-                        box.dispatchEvent(new Event('keyup', { bubbles: true }));
-                        box.dispatchEvent(new Event('keydown', { bubbles: true }));
-                        box.dispatchEvent(new KeyboardEvent('input', { bubbles: true }));
+                        // Set the value
+                        box.value = digit;
                         
-                        // Some OTP inputs need specific key events
-                        const inputEvent = new InputEvent('input', { 
-                            bubbles: true, 
-                            cancelable: true,
-                            data: digit
+                        // Create a REAL keyboard event (like typing)
+                        const keydownEvent = new KeyboardEvent('keydown', {
+                            key: digit,
+                            code: 'Digit' + digit,
+                            keyCode: 48 + parseInt(digit),
+                            bubbles: true,
+                            cancelable: true
+                        });
+                        box.dispatchEvent(keydownEvent);
+                        
+                        // Input event
+                        const inputEvent = new InputEvent('input', {
+                            data: digit,
+                            inputType: 'insertText',
+                            bubbles: true,
+                            cancelable: true
                         });
                         box.dispatchEvent(inputEvent);
                         
-                        console.log(`✅ Filled box ${i + 1} with: ${digit}`);
+                        // Change event
+                        box.dispatchEvent(new Event('change', { bubbles: true }));
+                        
+                        // Keyup event
+                        const keyupEvent = new KeyboardEvent('keyup', {
+                            key: digit,
+                            code: 'Digit' + digit,
+                            keyCode: 48 + parseInt(digit),
+                            bubbles: true,
+                            cancelable: true
+                        });
+                        box.dispatchEvent(keyupEvent);
+                        
+                        console.log(`✅ Box ${i + 1}: Filled with "${digit}" | Value now: "${box.value}"`);
+                        
+                        // Small delay between boxes (helps with some frameworks)
+                        await new Promise(resolve => setTimeout(resolve, 50));
+                    }
+                    
+                    // Focus the last box
+                    if (otpBoxes[otpBoxes.length - 1]) {
+                        otpBoxes[otpBoxes.length - 1].blur();
                     }
                     
                     filled = true;
+                    console.log('🎉 ALL BOXES FILLED!');
                 } else {
                     // Try single field method
                     const codeSelectors = [
@@ -529,9 +590,9 @@
                 }
 
                 if (filled) {
-                    this.updateStatus(`<strong>🎉 DONE! CODE FILLED! 🔥</strong><br><br>✅ Code: ${code}<br><br>YOU'RE ALL SET BRO! 💪<br><br>Click submit and you're IN!`, 100);
+                    this.updateStatus(`<strong>🎉 CODE FILLED! 🔥</strong><br><br>✅ Code: <strong>${code}</strong><br><br>Check if all boxes are filled!<br>If not, paste this code manually! 💪`, 100);
                 } else {
-                    this.updateStatus(`<strong>✅ Code Found!</strong><br><br><strong>${code}</strong><br><br>⚠️ Couldn't auto-fill it<br><br>But copy that code and paste it manually! 👆`, 90);
+                    this.updateStatus(`<strong>✅ Code Found!</strong><br><br><strong style="font-size:20px;">${code}</strong><br><br>⚠️ Couldn't find OTP boxes<br>(Found ${otpBoxes.length} inputs)<br><br>COPY this code and paste manually! 👆`, 90);
                 }
 
             } catch (error) {
