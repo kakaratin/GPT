@@ -398,9 +398,19 @@
                 const fullMessage = await this.mailTM.getMessage(latestMessage.id);
 
                 // Extract verification code - try multiple patterns
-                const text = (fullMessage.text || '') + ' ' + (fullMessage.html || '').replace(/<[^>]*>/g, ' ');
+                // Make sure we handle html properly (it might not be a string)
+                let htmlText = '';
+                if (fullMessage.html) {
+                    if (typeof fullMessage.html === 'string') {
+                        htmlText = fullMessage.html.replace(/<[^>]*>/g, ' ');
+                    } else {
+                        htmlText = String(fullMessage.html);
+                    }
+                }
+                
+                const textContent = fullMessage.text || '';
                 const subject = fullMessage.subject || '';
-                const fullText = text + ' ' + subject;
+                const fullText = textContent + ' ' + htmlText + ' ' + subject;
 
                 console.log('Email content:', fullText);
 
