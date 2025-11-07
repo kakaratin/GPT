@@ -5,11 +5,12 @@ YO! This is a SICK Tampermonkey script that automates the signup process for clo
 ## 🚀 What This Does
 
 - ✅ Automatically creates a temporary email using mail.tm API
-- ✅ Auto-fills the signup form with email, password, and username
-- ✅ YOU solve the captcha manually (because we're not breaking ToS, bro!)
+- ✅ Auto-fills the email field in the login/signup box
+- ✅ YOU solve the captcha manually (we play fair bro! 😎)
 - ✅ Automatically monitors the temp email inbox
 - ✅ Extracts and auto-fills the verification code
-- ✅ Beautiful UI panel that guides you through the whole process!
+- ✅ Beautiful minimizable UI panel that guides you through the whole process!
+- ✅ Works with the combined login/signup flow (just email → code → done!)
 
 ## 📦 Installation
 
@@ -27,90 +28,100 @@ First, you need Tampermonkey browser extension:
 6. Hit Ctrl+S (or Cmd+S on Mac) to save
 7. BOOM! You're ready! 🎉
 
-## 🎮 How To Use
+## 🎮 How To Use (SUPER SIMPLE!)
 
-### Step 1: Visit the site
-Go to https://cloud.vmoscloud.com/ (or wherever the signup page is)
+### Step 1: Visit the site 🌐
+Go to https://cloud.vmoscloud.com/
 
-### Step 2: You'll see a purple panel
-A beautiful purple panel will appear in the top-right corner! 💜
+### Step 2: You'll see a purple panel! 💜
+A beautiful purple panel appears in the top-right corner!
+- Click the **−** button to minimize it (or click the header!)
+- Click the **+** button to expand it again!
 
-### Step 3: Click "Start Auto Signup" 🚀
+### Step 3: Click "📧 Fill Email (Step 1)" 
 The script will:
 - Create a temp email automatically
-- Fill in all the form fields
-- Show you the email it's using
+- Fill it in the email/login box
+- Show you the email it's using at the top!
 
 ### Step 4: Solve the Captcha 🤖
-This is YOUR job bro! The script can't do this part (and shouldn't - gotta play fair!)
+This is YOUR job bro! Just solve that captcha (the script waits for you!)
 
-### Step 5: Submit the form
+### Step 5: Submit the form ✅
 Click that submit button after solving the captcha!
 
-### Step 6: Click "Check & Fill Code" 📧
+### Step 6: Click "🔍 Check & Fill Code (Step 2)" 📧
 The script will:
 - Check the mail.tm inbox
 - Find the verification email
 - Extract the code
 - Auto-fill it for you!
 
-If the email hasn't arrived yet, just wait a few seconds and click the button again!
+**If the email hasn't arrived yet:** Just wait 5-10 seconds and click the button again! The site takes a moment to send it.
 
 ## 🎨 Features
 
-### Beautiful UI Panel
+### Beautiful Minimizable UI Panel
 - 🟣 Purple gradient design (because it looks FIRE!)
-- 📊 Progress bar showing where you're at
+- **📊 Progress bar** showing where you're at
+- **−/+** Minimize/maximize button (keep it out of the way!)
+- **📧 Email display** at the top (always see your temp email!)
 - 📝 Status updates for every step
 - 🎯 Clear buttons for each action
 
 ### Smart Form Filling
-The script tries MULTIPLE selectors to find:
-- Email fields
-- Password fields
-- Username fields
-- Verification code fields
+The script tries MULTIPLE selectors and methods to find:
+- Email/login fields (tries 7+ different patterns!)
+- Verification code fields (tries 9+ different patterns!)
+- Triggers ALL possible events to make sure frameworks detect the input
 
-So it should work even if the site structure is a bit different!
+So it works even if the site changes!
 
 ### Mail.tm Integration
-- Creates accounts automatically
+- Creates accounts automatically (free temp emails!)
 - Saves your temp email for the session
 - Monitors inbox in real-time
-- Extracts verification codes using smart patterns
+- Extracts verification codes using 8+ smart patterns
+- Shows you the email content if it can't find the code
 
 ## 🔧 Buttons Explained
 
-- **🚀 Start Auto Signup**: Kicks off the whole process
-- **📧 Check & Fill Code**: Checks inbox and auto-fills verification code
-- **✉️ Generate New Email**: Creates a fresh temp email (if you need a new one)
-- **🔄 Reset Everything**: Clears all saved data and starts fresh
-- **✖ Close**: Hides the panel (it'll come back on page refresh)
+- **📧 Fill Email (Step 1)**: Creates temp email & fills it in the form
+- **🔍 Check & Fill Code (Step 2)**: Checks inbox and auto-fills verification code
+- **✉️ New Email**: Creates a fresh temp email (if you need a different one)
+- **🔄 Reset**: Clears all saved data and starts fresh
+- **−/+**: Minimize/maximize the panel (stay out of your way!)
 
 ## 🛠️ Troubleshooting
 
-### "Element not found" error?
-The signup form might be structured differently. You can:
-1. Check the browser console for details
-2. Manually fill the fields
-3. The script will still handle the verification code part!
+### Can't fill the email field?
+- The script shows you the email in the panel - copy it manually!
+- Make sure you're on the right page (the login/signup box should be visible)
+- Try clicking "Fill Email" again after the page loads completely
 
-### Email not receiving?
-- Wait 10-30 seconds (mail.tm can be a bit slow)
-- Click "Check & Fill Code" again
-- Check if the email was filled correctly in the form
+### Email not arriving?
+- Wait 10-30 seconds (mail.tm can be a bit slow sometimes)
+- Click "Check & Fill Code" button again after waiting
+- The script will tell you when it finds the email!
 
 ### Can't find the verification code?
-The script shows you the email content! You can:
+The script shows you the email content if it can't extract the code! You can:
 - Copy the code manually from the status box
-- The script tries multiple patterns to find codes
+- The script tries 8+ different patterns to find codes
+- Check your browser console (F12) for more details
+
+### Panel blocking the view?
+- Click the **−** button to minimize it!
+- Click the header or **+** button to bring it back
+- You can minimize it during captcha solving!
 
 ## 🎯 Pro Tips
 
-1. **Keep the panel open** - It shows you important info like your temp email!
-2. **Don't rush** - Wait for each step to complete before moving on
-3. **The email is saved** - Even if you refresh, your temp email is remembered
-4. **Use "Reset Everything"** - If something goes wrong, this clears everything for a fresh start
+1. **Minimize the panel** - Click the − button to get it out of your way!
+2. **The email is saved** - Even if you refresh, your temp email is remembered
+3. **Wait for the email** - VmosCloud takes 5-30 seconds to send the code
+4. **Use "Reset"** - If something goes wrong, reset and start fresh!
+5. **Check the console** - Press F12 to see detailed logs of what the script is doing
 
 ## ⚠️ Important Notes
 

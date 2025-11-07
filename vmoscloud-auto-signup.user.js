@@ -30,13 +30,46 @@
             font-family: 'Arial', sans-serif;
             min-width: 300px;
             max-width: 400px;
+            transition: all 0.3s;
         }
-        .auto-signup-panel h3 {
-            margin: 0 0 15px 0;
+        .auto-signup-panel.minimized {
+            padding: 10px 15px;
+            min-width: 200px;
+        }
+        .auto-signup-panel.minimized .panel-body {
+            display: none;
+        }
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .auto-signup-panel.minimized .panel-header {
+            margin-bottom: 0;
+        }
+        .panel-header h3 {
+            margin: 0;
             font-size: 18px;
             display: flex;
             align-items: center;
             gap: 8px;
+            flex: 1;
+        }
+        .minimize-btn {
+            background: rgba(255,255,255,0.2) !important;
+            color: white !important;
+            padding: 5px 12px !important;
+            font-size: 16px !important;
+            border-radius: 5px !important;
+            margin: 0 !important;
+            width: auto !important;
+            margin-left: 10px !important;
+        }
+        .minimize-btn:hover {
+            background: rgba(255,255,255,0.3) !important;
         }
         .auto-signup-panel button {
             width: 100%;
@@ -87,11 +120,13 @@
             width: 0%;
             transition: width 0.3s;
         }
-        .close-btn {
-            background: #ef4444 !important;
-            color: white !important;
-            padding: 8px !important;
-            font-size: 12px !important;
+        .email-display {
+            background: rgba(0,0,0,0.2);
+            padding: 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            margin: 10px 0;
+            word-break: break-all;
         }
     `;
 
@@ -210,34 +245,54 @@
             const panel = document.createElement('div');
             panel.className = 'auto-signup-panel';
             panel.innerHTML = `
-                <h3>🔥 Auto Signup Helper</h3>
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
+                <div class="panel-header">
+                    <h3>🔥 VmosCloud Helper</h3>
+                    <button class="minimize-btn" id="minimizeBtn">−</button>
                 </div>
-                <div class="status-box" id="statusBox">
-                    <strong>Ready to GO! 💪</strong>
-                    Click "Start Auto Signup" to begin!
+                <div class="panel-body">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="email-display" id="emailDisplay" style="display:none;">
+                        📧 <span id="currentEmail"></span>
+                    </div>
+                    <div class="status-box" id="statusBox">
+                        <strong>Ready to GO! 💪</strong>
+                        Let's get you signed up bro!
+                    </div>
+                    <button id="fillEmailBtn">📧 Fill Email (Step 1)</button>
+                    <button id="checkCodeBtn" style="display:none;">🔍 Check & Fill Code (Step 2)</button>
+                    <button id="newEmailBtn">✉️ New Email</button>
+                    <button id="resetBtn">🔄 Reset</button>
                 </div>
-                <button id="startBtn">🚀 Start Auto Signup</button>
-                <button id="fillCodeBtn" style="display:none;">📧 Check & Fill Code</button>
-                <button id="newEmailBtn">✉️ Generate New Email</button>
-                <button id="resetBtn">🔄 Reset Everything</button>
-                <button class="close-btn" id="closeBtn">✖ Close</button>
             `;
 
             document.body.appendChild(panel);
             this.ui = panel;
             this.statusBox = panel.querySelector('#statusBox');
             this.progressBar = panel.querySelector('#progressFill');
+            this.emailDisplay = panel.querySelector('#emailDisplay');
+            this.currentEmailSpan = panel.querySelector('#currentEmail');
+
+            // Minimize/Maximize
+            const minimizeBtn = panel.querySelector('#minimizeBtn');
+            minimizeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                panel.classList.toggle('minimized');
+                minimizeBtn.textContent = panel.classList.contains('minimized') ? '+' : '−';
+            });
+
+            // Click header to toggle
+            panel.querySelector('.panel-header').addEventListener('click', () => {
+                panel.classList.toggle('minimized');
+                minimizeBtn.textContent = panel.classList.contains('minimized') ? '+' : '−';
+            });
 
             // Event listeners
-            panel.querySelector('#startBtn').addEventListener('click', () => this.startAutoSignup());
-            panel.querySelector('#fillCodeBtn').addEventListener('click', () => this.checkAndFillCode());
+            panel.querySelector('#fillEmailBtn').addEventListener('click', () => this.fillEmail());
+            panel.querySelector('#checkCodeBtn').addEventListener('click', () => this.checkAndFillCode());
             panel.querySelector('#newEmailBtn').addEventListener('click', () => this.generateNewEmail());
             panel.querySelector('#resetBtn').addEventListener('click', () => this.reset());
-            panel.querySelector('#closeBtn').addEventListener('click', () => {
-                panel.style.display = 'none';
-            });
         }
 
         updateStatus(message, progress = null) {
@@ -252,162 +307,177 @@
 
         async generateNewEmail() {
             try {
-                this.updateStatus('⏳ Generating new email...', 10);
+                this.updateStatus('⏳ Generating new email...', 20);
                 const { email } = await this.mailTM.createAccount();
-                this.updateStatus(`<strong>✅ Email Created!</strong><br>${email}<br><br>This email is now saved and ready to use!`, 100);
+                this.emailDisplay.style.display = 'block';
+                this.currentEmailSpan.textContent = email;
+                this.updateStatus(`<strong>✅ Email Ready!</strong><br><br>Click "Fill Email" to auto-fill it in the form! 🚀`, 100);
+            } catch (error) {
+                this.updateStatus(`<strong>❌ OH SHIT!</strong><br>${error.message}<br><br>Try again bro!`, 0);
+            }
+        }
+
+        async fillEmail() {
+            try {
+                // Make sure we have an email
+                if (!this.mailTM.email || !this.mailTM.token) {
+                    this.updateStatus('📧 Creating temp email first...', 10);
+                    await this.mailTM.createAccount();
+                    this.emailDisplay.style.display = 'block';
+                    this.currentEmailSpan.textContent = this.mailTM.email;
+                }
+
+                this.updateStatus(`<strong>Looking for email field...</strong>`, 30);
+
+                // Try to find and fill email field with multiple methods
+                const emailSelectors = [
+                    'input[type="email"]',
+                    'input[type="text"]',
+                    'input[name*="email" i]',
+                    'input[placeholder*="email" i]',
+                    'input[placeholder*="mail" i]',
+                    'input[id*="email" i]',
+                    'input[class*="email" i]'
+                ];
+
+                let filled = false;
+                for (let selector of emailSelectors) {
+                    const fields = document.querySelectorAll(selector);
+                    for (let field of fields) {
+                        // Make sure field is visible
+                        if (field.offsetParent !== null && !field.disabled) {
+                            field.value = this.mailTM.email;
+                            
+                            // Trigger all possible events
+                            field.dispatchEvent(new Event('input', { bubbles: true }));
+                            field.dispatchEvent(new Event('change', { bubbles: true }));
+                            field.dispatchEvent(new Event('blur', { bubbles: true }));
+                            field.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true }));
+                            field.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
+                            
+                            // Also try to focus it
+                            field.focus();
+                            
+                            console.log('✅ Email filled in:', selector, field);
+                            filled = true;
+                            break;
+                        }
+                    }
+                    if (filled) break;
+                }
+
+                if (filled) {
+                    this.updateStatus(`<strong>✅ EMAIL FILLED! 🔥</strong><br><br>📧 ${this.mailTM.email}<br><br><strong>NOW:</strong><br>1. Solve the captcha 🤖<br>2. Click Submit<br>3. Click "Check & Fill Code" below!`, 50);
+                    // Show the check code button
+                    document.querySelector('#checkCodeBtn').style.display = 'block';
+                } else {
+                    this.updateStatus(`<strong>⚠️ Couldn't find email field!</strong><br><br>Manually paste this:<br><br>${this.mailTM.email}<br><br>Then solve captcha & click "Check & Fill Code"`, 40);
+                    document.querySelector('#checkCodeBtn').style.display = 'block';
+                }
+
             } catch (error) {
                 this.updateStatus(`<strong>❌ ERROR!</strong><br>${error.message}`, 0);
-            }
-        }
-
-        async startAutoSignup() {
-            try {
-                this.updateStatus('🚀 STARTING AUTO SIGNUP...', 5);
-
-                // Step 1: Make sure we have an email
-                if (!this.mailTM.email || !this.mailTM.token) {
-                    this.updateStatus('📧 Creating temp email account...', 10);
-                    await this.mailTM.createAccount();
-                }
-
-                this.updateStatus(`<strong>📧 Using Email:</strong><br>${this.mailTM.email}`, 30);
-
-                // Step 2: Fill the form
-                await this.waitForElement('input[type="email"], input[name="email"]', 5000);
-                this.fillSignupForm();
-                this.updateStatus(`<strong>✅ Form Filled!</strong><br><br>📧 Email: ${this.mailTM.email}<br><br>🤖 NOW SOLVE THE CAPTCHA BRO!<br>Then click submit and hit "Check & Fill Code" button!`, 60);
-
-                // Show the fill code button
-                document.querySelector('#fillCodeBtn').style.display = 'block';
-
-            } catch (error) {
-                this.updateStatus(`<strong>❌ OH SHIT! ERROR!</strong><br>${error.message}`, 0);
-            }
-        }
-
-        fillSignupForm() {
-            // Try to find and fill email field
-            const emailSelectors = [
-                'input[type="email"]',
-                'input[name="email"]',
-                'input[placeholder*="email" i]',
-                'input[placeholder*="mail" i]',
-                'input[id*="email" i]'
-            ];
-
-            for (let selector of emailSelectors) {
-                const emailField = document.querySelector(selector);
-                if (emailField) {
-                    emailField.value = this.mailTM.email;
-                    emailField.dispatchEvent(new Event('input', { bubbles: true }));
-                    emailField.dispatchEvent(new Event('change', { bubbles: true }));
-                    console.log('✅ Email filled:', selector);
-                    break;
-                }
-            }
-
-            // Try to fill password fields with a strong random password
-            const password = 'Pass' + Math.random().toString(36).substring(2) + '123!@#';
-            const passwordFields = document.querySelectorAll('input[type="password"]');
-            passwordFields.forEach(field => {
-                field.value = password;
-                field.dispatchEvent(new Event('input', { bubbles: true }));
-                field.dispatchEvent(new Event('change', { bubbles: true }));
-            });
-
-            if (passwordFields.length > 0) {
-                console.log('✅ Password filled');
-            }
-
-            // Try to fill username if exists
-            const usernameSelectors = [
-                'input[name="username"]',
-                'input[placeholder*="username" i]',
-                'input[id*="username" i]'
-            ];
-
-            for (let selector of usernameSelectors) {
-                const usernameField = document.querySelector(selector);
-                if (usernameField) {
-                    usernameField.value = 'user' + Math.random().toString(36).substring(2, 10);
-                    usernameField.dispatchEvent(new Event('input', { bubbles: true }));
-                    usernameField.dispatchEvent(new Event('change', { bubbles: true }));
-                    console.log('✅ Username filled:', selector);
-                    break;
-                }
             }
         }
 
         async checkAndFillCode() {
             try {
-                this.updateStatus('📬 Checking inbox for verification code...', 70);
+                this.updateStatus('📬 Checking inbox...', 60);
 
                 const messages = await this.mailTM.getMessages();
 
                 if (messages.length === 0) {
-                    this.updateStatus(`<strong>📭 No emails yet!</strong><br><br>Waiting for verification email...<br>Click this button again in a few seconds!`, 70);
+                    this.updateStatus(`<strong>📭 No emails yet!</strong><br><br>⏳ Waiting for verification code...<br><br>Click again in 5-10 seconds!`, 70);
                     return;
                 }
 
                 // Get the latest message
                 const latestMessage = messages[0];
+                this.updateStatus(`<strong>📧 Email found!</strong><br><br>Getting verification code...`, 75);
+                
                 const fullMessage = await this.mailTM.getMessage(latestMessage.id);
 
-                this.updateStatus(`<strong>📧 Email Received!</strong><br><br>Subject: ${fullMessage.subject}<br><br>Looking for verification code...`, 80);
+                // Extract verification code - try multiple patterns
+                const text = (fullMessage.text || '') + ' ' + (fullMessage.html || '').replace(/<[^>]*>/g, ' ');
+                const subject = fullMessage.subject || '';
+                const fullText = text + ' ' + subject;
 
-                // Extract verification code (common patterns)
-                const text = fullMessage.text || fullMessage.html || '';
+                console.log('Email content:', fullText);
+
                 const codePatterns = [
+                    /verification code[:\s]+([A-Z0-9]{4,8})/i,
                     /code[:\s]+([A-Z0-9]{4,8})/i,
-                    /verification[:\s]+([A-Z0-9]{4,8})/i,
+                    /your code[:\s]+([A-Z0-9]{4,8})/i,
                     /\b([A-Z0-9]{6})\b/,
+                    /\b([0-9]{6})\b/,
                     /\b([0-9]{4,8})\b/,
+                    /[：:]\s*([A-Z0-9]{4,8})/i,
                     /code[^a-z0-9]+([a-z0-9]{4,8})/i
                 ];
 
                 let code = null;
                 for (let pattern of codePatterns) {
-                    const match = text.match(pattern);
-                    if (match) {
+                    const match = fullText.match(pattern);
+                    if (match && match[1]) {
                         code = match[1];
+                        console.log('✅ Code found with pattern:', pattern, '→', code);
                         break;
                     }
                 }
 
-                if (code) {
-                    // Try to fill verification code field
-                    const codeSelectors = [
-                        'input[name*="code" i]',
-                        'input[placeholder*="code" i]',
-                        'input[placeholder*="verification" i]',
-                        'input[id*="code" i]',
-                        'input[type="text"]'
-                    ];
+                if (!code) {
+                    // Show the email content so user can find it manually
+                    this.updateStatus(`<strong>⚠️ Couldn't extract code!</strong><br><br><strong>Subject:</strong> ${subject}<br><br><strong>Content preview:</strong><br>${text.substring(0, 200)}...<br><br>Copy the code manually bro!`, 85);
+                    return;
+                }
 
-                    let filled = false;
-                    for (let selector of codeSelectors) {
-                        const codeField = document.querySelector(selector);
-                        if (codeField && codeField.offsetParent !== null) {
-                            codeField.value = code;
-                            codeField.dispatchEvent(new Event('input', { bubbles: true }));
-                            codeField.dispatchEvent(new Event('change', { bubbles: true }));
+                // Found the code! Now try to fill it
+                this.updateStatus(`<strong>✅ Code Found: ${code}</strong><br><br>Filling it now...`, 85);
+
+                const codeSelectors = [
+                    'input[type="text"]:not([name*="email" i]):not([name*="mail" i])',
+                    'input[name*="code" i]',
+                    'input[placeholder*="code" i]',
+                    'input[placeholder*="verification" i]',
+                    'input[placeholder*="verify" i]',
+                    'input[id*="code" i]',
+                    'input[id*="verify" i]',
+                    'input[class*="code" i]',
+                    'input[type="text"]'
+                ];
+
+                let filled = false;
+                for (let selector of codeSelectors) {
+                    const fields = document.querySelectorAll(selector);
+                    for (let field of fields) {
+                        // Make sure field is visible and empty (or contains a placeholder)
+                        if (field.offsetParent !== null && !field.disabled && field.value.length < 3) {
+                            field.value = code;
+                            
+                            // Trigger ALL the events!
+                            field.dispatchEvent(new Event('input', { bubbles: true }));
+                            field.dispatchEvent(new Event('change', { bubbles: true }));
+                            field.dispatchEvent(new Event('blur', { bubbles: true }));
+                            field.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true }));
+                            field.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
+                            field.focus();
+                            
+                            console.log('✅ Code filled in field:', selector, field);
                             filled = true;
-                            console.log('✅ Code filled:', selector);
                             break;
                         }
                     }
+                    if (filled) break;
+                }
 
-                    if (filled) {
-                        this.updateStatus(`<strong>🎉 CODE FILLED!</strong><br><br>Verification Code: ${code}<br><br>BOOM! You're all set bro! 💪🔥`, 100);
-                    } else {
-                        this.updateStatus(`<strong>✅ Code Found!</strong><br><br>${code}<br><br>Couldn't auto-fill (maybe wrong page?), but copy that code above! 👆`, 90);
-                    }
+                if (filled) {
+                    this.updateStatus(`<strong>🎉 DONE! CODE FILLED! 🔥</strong><br><br>✅ Code: ${code}<br><br>YOU'RE ALL SET BRO! 💪<br><br>Click submit and you're IN!`, 100);
                 } else {
-                    this.updateStatus(`<strong>📧 Email Content:</strong><br><br>${text.substring(0, 300)}...<br><br>Couldn't extract code automatically. Check the email above!`, 85);
+                    this.updateStatus(`<strong>✅ Code Found!</strong><br><br><strong>${code}</strong><br><br>⚠️ Couldn't auto-fill it (maybe you're on wrong page?)<br><br>But here's your code - paste it manually! 👆`, 90);
                 }
 
             } catch (error) {
-                this.updateStatus(`<strong>❌ ERROR!</strong><br>${error.message}`, 0);
+                this.updateStatus(`<strong>❌ ERROR!</strong><br>${error.message}<br><br>MY BAD! Try clicking again?`, 0);
             }
         }
 
@@ -426,8 +496,10 @@
             if (this.checkInterval) {
                 clearInterval(this.checkInterval);
             }
-            this.updateStatus('<strong>🔄 Reset Complete!</strong><br>All data cleared. Ready for a fresh start! 💪', 0);
-            document.querySelector('#fillCodeBtn').style.display = 'none';
+            this.emailDisplay.style.display = 'none';
+            this.currentEmailSpan.textContent = '';
+            this.updateStatus('<strong>🔄 Reset Complete!</strong><br><br>All cleared! Ready to GO AGAIN! 💪', 0);
+            document.querySelector('#checkCodeBtn').style.display = 'none';
         }
 
         init() {
