@@ -434,46 +434,94 @@
                 // Found the code! Now try to fill it
                 this.updateStatus(`<strong>✅ Code Found: ${code}</strong><br><br>Filling it now...`, 85);
 
-                const codeSelectors = [
-                    'input[type="text"]:not([name*="email" i]):not([name*="mail" i])',
-                    'input[name*="code" i]',
-                    'input[placeholder*="code" i]',
-                    'input[placeholder*="verification" i]',
-                    'input[placeholder*="verify" i]',
-                    'input[id*="code" i]',
-                    'input[id*="verify" i]',
-                    'input[class*="code" i]',
-                    'input[type="text"]'
-                ];
+                // First, try to find 6 separate input boxes (OTP style)
+                const allInputs = Array.from(document.querySelectorAll('input'));
+                const visibleInputs = allInputs.filter(input => 
+                    input.offsetParent !== null && 
+                    !input.disabled && 
+                    input.type !== 'hidden' &&
+                    input.type !== 'email' &&
+                    !input.name?.toLowerCase().includes('email') &&
+                    !input.placeholder?.toLowerCase().includes('email')
+                );
 
+                console.log('Found visible inputs:', visibleInputs.length, visibleInputs);
+
+                // Check if we have 6 boxes (or 4-8 boxes for OTP)
                 let filled = false;
-                for (let selector of codeSelectors) {
-                    const fields = document.querySelectorAll(selector);
-                    for (let field of fields) {
-                        // Make sure field is visible and empty (or contains a placeholder)
-                        if (field.offsetParent !== null && !field.disabled && field.value.length < 3) {
-                            field.value = code;
-                            
-                            // Trigger ALL the events!
-                            field.dispatchEvent(new Event('input', { bubbles: true }));
-                            field.dispatchEvent(new Event('change', { bubbles: true }));
-                            field.dispatchEvent(new Event('blur', { bubbles: true }));
-                            field.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true }));
-                            field.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
-                            field.focus();
-                            
-                            console.log('✅ Code filled in field:', selector, field);
-                            filled = true;
-                            break;
-                        }
+                if (visibleInputs.length >= 4 && visibleInputs.length <= 8 && code.length >= visibleInputs.length) {
+                    // Likely OTP boxes! Fill each one with a digit
+                    console.log('🎯 Detected OTP boxes! Filling individually...');
+                    const codeDigits = code.split('');
+                    
+                    for (let i = 0; i < Math.min(visibleInputs.length, codeDigits.length); i++) {
+                        const box = visibleInputs[i];
+                        const digit = codeDigits[i];
+                        
+                        box.value = digit;
+                        box.focus();
+                        
+                        // Trigger ALL events for each box
+                        box.dispatchEvent(new Event('input', { bubbles: true }));
+                        box.dispatchEvent(new Event('change', { bubbles: true }));
+                        box.dispatchEvent(new Event('keyup', { bubbles: true }));
+                        box.dispatchEvent(new Event('keydown', { bubbles: true }));
+                        box.dispatchEvent(new KeyboardEvent('input', { bubbles: true }));
+                        
+                        // Some OTP inputs need specific key events
+                        const inputEvent = new InputEvent('input', { 
+                            bubbles: true, 
+                            cancelable: true,
+                            data: digit
+                        });
+                        box.dispatchEvent(inputEvent);
+                        
+                        console.log(`✅ Filled box ${i + 1} with: ${digit}`);
                     }
-                    if (filled) break;
+                    
+                    filled = true;
+                } else {
+                    // Try single field method
+                    const codeSelectors = [
+                        'input[type="text"]:not([name*="email" i]):not([name*="mail" i])',
+                        'input[name*="code" i]',
+                        'input[placeholder*="code" i]',
+                        'input[placeholder*="verification" i]',
+                        'input[placeholder*="verify" i]',
+                        'input[id*="code" i]',
+                        'input[id*="verify" i]',
+                        'input[class*="code" i]',
+                        'input[type="tel"]',
+                        'input[type="number"]'
+                    ];
+
+                    for (let selector of codeSelectors) {
+                        const fields = document.querySelectorAll(selector);
+                        for (let field of fields) {
+                            if (field.offsetParent !== null && !field.disabled && field.value.length < 3) {
+                                field.value = code;
+                                
+                                // Trigger ALL the events!
+                                field.dispatchEvent(new Event('input', { bubbles: true }));
+                                field.dispatchEvent(new Event('change', { bubbles: true }));
+                                field.dispatchEvent(new Event('blur', { bubbles: true }));
+                                field.dispatchEvent(new KeyboardEvent('keydown', { bubbles: true }));
+                                field.dispatchEvent(new KeyboardEvent('keyup', { bubbles: true }));
+                                field.focus();
+                                
+                                console.log('✅ Code filled in single field:', selector, field);
+                                filled = true;
+                                break;
+                            }
+                        }
+                        if (filled) break;
+                    }
                 }
 
                 if (filled) {
                     this.updateStatus(`<strong>🎉 DONE! CODE FILLED! 🔥</strong><br><br>✅ Code: ${code}<br><br>YOU'RE ALL SET BRO! 💪<br><br>Click submit and you're IN!`, 100);
                 } else {
-                    this.updateStatus(`<strong>✅ Code Found!</strong><br><br><strong>${code}</strong><br><br>⚠️ Couldn't auto-fill it (maybe you're on wrong page?)<br><br>But here's your code - paste it manually! 👆`, 90);
+                    this.updateStatus(`<strong>✅ Code Found!</strong><br><br><strong>${code}</strong><br><br>⚠️ Couldn't auto-fill it<br><br>But copy that code and paste it manually! 👆`, 90);
                 }
 
             } catch (error) {

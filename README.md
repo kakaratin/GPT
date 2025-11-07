@@ -72,7 +72,9 @@ The script will:
 ### Smart Form Filling
 The script tries MULTIPLE selectors and methods to find:
 - Email/login fields (tries 7+ different patterns!)
-- Verification code fields (tries 9+ different patterns!)
+- Verification code fields - **supports both single field AND 6-box OTP inputs!** 🎯
+- **Automatically detects 6-box verification** (like [ 1 ] [ 2 ] [ 3 ] [ 4 ] [ 5 ] [ 6 ])
+- Fills each digit into separate boxes automatically!
 - Triggers ALL possible events to make sure frameworks detect the input
 
 So it works even if the site changes!
@@ -104,11 +106,12 @@ So it works even if the site changes!
 - Click "Check & Fill Code" button again after waiting
 - The script will tell you when it finds the email!
 
-### Can't find the verification code?
-The script shows you the email content if it can't extract the code! You can:
-- Copy the code manually from the status box
-- The script tries 8+ different patterns to find codes
-- Check your browser console (F12) for more details
+### Can't fill the verification code?
+The script automatically detects if it's 6 separate boxes or one field! If it still doesn't work:
+- The script shows you the code in the status box - copy it manually!
+- Check browser console (F12) - it logs which boxes it's filling
+- The script tries 8+ different patterns to extract codes from emails
+- Works with both single input fields AND 6-box OTP inputs!
 
 ### Panel blocking the view?
 - Click the **−** button to minimize it!
