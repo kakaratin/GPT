@@ -56,31 +56,39 @@ console = Console()
 
 def print_banner():
     """Print an INSANE professional CLI banner"""
-    accent = "#ff4fd8"
-    neon = "#00f0ff"
+    accent = "#ff53d6"
+    neon = "#00f7ff"
     glow = "#f8ff9a"
+    pulse = "#a975ff"
+    backdrop = "#15001f"
 
     logo_lines = [
-        "████████╗██████╗      ██████╗  █████╗ ███████╗",
-        "╚══██╔══╝██╔══██╗    ██╔════╝ ██╔══██╗██╔════╝",
-        "   ██║   ██████╔╝    ██║  ███╗███████║█████╗  ",
-        "   ██║   ██╔═══╝     ██║   ██║██╔══██║██╔══╝  ",
-        "   ██║   ██║         ╚██████╔╝██║  ██║███████╗",
-        "   ╚═╝   ╚═╝          ╚═════╝ ╚═╝  ╚═╝╚══════╝",
+        "          _   _ _______ _____    _____      __     __  _____  ________      __",
+        "    /\\   | \\ | |__   __|_   _|  / ____|   /\\\\ \\   / / |  __ \\|  ____\\ \\    / /",
+        "   /  \\  |  \\| |  | |    | |   | |  __   /  \\\\ \\_/ /  | |  | | |__   \\ \\  / /",
+        "  / /\\ \\ | . ` |  | |    | |   | | |_ | / /\\ \\\\   /   | |  | |  __|   \\ \\/ /",
+        " / ____ \\| |\\  |  | |   _| |_  | |__| |/ ____ \\| |    | |__| | |____   \\  /",
+        "/_/    \\_\\_| \\_|  |_|  |_____|  \\_____/_/    \\_\\_|    |_____/|______|   \\_/",
     ]
 
     logo = Text(justify="center")
     for line in logo_lines:
         logo.append(line + "\n", style=f"bold {accent}")
 
+    badge = Text(
+        "✦ ANTI GAY DEV ✦",
+        style=f"bold {pulse} on #2b0040",
+        justify="center",
+    )
+
     tagline = Text(
-        "PROPERTY OF TDJS // LEAK OPS DIVISION",
+        "PROPERTY OF TDJS // GLITCH OPS DIRECTIVE",
         style=f"bold {neon}",
         justify="center",
     )
 
     sub_tagline = Text(
-        "Surgical log extraction. Zero mercy.",
+        "Relentless log scrapes. Zero apologies.",
         style=f"italic {glow}",
         justify="center",
     )
@@ -88,16 +96,17 @@ def print_banner():
     feature_grid = Table.grid(padding=(0, 3))
     feature_grid.add_column(justify="right", style=f"{neon}")
     feature_grid.add_column(justify="left", style="white")
-    feature_grid.add_row("★", "Multi-domain recon with style")
-    feature_grid.add_row("★", "Tdjs-branded exports on every hit")
-    feature_grid.add_row("★", "Cinematic preview for instant intel")
+    feature_grid.add_row("⚡", "Anti-filter recon with neon swagger")
+    feature_grid.add_row("♞", "Tdjs-branded exports—every capture stamped")
+    feature_grid.add_row("☣", "Cinematic preview buffering your intel drip")
 
     banner_body = Group(
         logo,
-        Text("═" * 58, style=f"{accent}", justify="center"),
+        badge,
+        Text("═" * 70, style=f"{accent}", justify="center"),
         tagline,
         sub_tagline,
-        Text("═" * 58, style=f"{accent}", justify="center"),
+        Text("═" * 70, style=f"{accent}", justify="center"),
         Align.center(feature_grid),
     )
 
@@ -105,9 +114,12 @@ def print_banner():
         banner_body,
         box=box.DOUBLE,
         border_style=f"bold {neon}",
-        padding=(1, 4),
-        subtitle="[bold #ff8df4]Leak Parser v2.5[/bold #ff8df4]",
+        padding=(1, 5),
+        subtitle="[bold #ff9bff]Leak Parser v2.6[/bold #ff9bff]",
         subtitle_align="right",
+        style=f"on {backdrop}",
+        title="[bold #ff53d6]ANTI GAY DEV[/bold #ff53d6]",
+        title_align="left",
     )
 
     console.print("\n")
