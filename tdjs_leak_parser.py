@@ -62,49 +62,23 @@ def print_banner():
     pulse = "#a975ff"
     backdrop = "#15001f"
 
-    logo_blocks = [
-        (
-            accent,
-            [
-                "          _   _ _______ _____",
-                "    /\\   | \\ | |__   __|_   _|",
-                "   /  \\  |  \\| |  | |    | |",
-                "  / /\\ \\ | . ` |  | |    | |",
-                " / ____ \\| |\\  |  | |   _| |_",
-                "/_/    \\_\\_| \\_|  |_|  |_____|",
-            ],
-        ),
-        (
-            neon,
-            [
-                "  _____      __     __",
-                " / ____|   /\\ \\   / /",
-                "| |  __   /  \\ \\_/ /",
-                "| | |_ | / /\\ \\   /",
-                "| |__| |/ ____ \\| |",
-                " \\_____/_/    \\_\\_|",
-            ],
-        ),
-        (
-            glow,
-            [
-                " _____  ________      __",
-                "|  __ \\|  ____\\ \\    / /",
-                "| |  | | |__   \\ \\  / /",
-                "| |  | |  __|   \\ \\/ /",
-                "| |__| | |____   \\  /",
-                "|_____/|______|   \\_/",
-            ],
-        ),
+    logo_lines = [
+        " █████╗ ███╗   ██╗████████╗██╗     ██████╗     ██████╗  █████╗ ██╗   ██╗    ██████╗ ███████╗██╗   ██╗",
+        "██╔══██╗████╗  ██║╚══██╔══╝██║     ██╔══██╗    ██╔══██╗██╔══██╗██║   ██║    ██╔══██╗██╔════╝██║   ██║",
+        "███████║██╔██╗ ██║   ██║   ██║     ██████╔╝    ██████╔╝███████║██║   ██║    ██║  ██║█████╗  ██║   ██║",
+        "██╔══██║██║╚██╗██║   ██║   ██║     ██╔══██╗    ██╔══██╗██╔══██║╚██╗ ██╔╝    ██║  ██║██╔══╝  ╚██╗ ██╔╝",
+        "██║  ██║██║ ╚████║   ██║   ███████╗██║  ██║    ██║  ██║██║  ██║ ╚████╔╝     ██████╔╝███████╗ ╚████╔╝ ",
+        "╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝    ╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝      ╚═════╝ ╚══════╝  ╚═══╝  ",
     ]
 
     logo_renderables: list[Text] = []
-    for color, block in logo_blocks:
-        for line in block:
-            logo_renderables.append(
-                Text(line, style=f"bold {color}", justify="center")
-            )
-        logo_renderables.append(Text("", justify="center"))
+    for line in logo_lines:
+        text_line = Text(line, justify="center")
+        text_line.stylize(f"bold {accent}", 0, 35)
+        text_line.stylize(f"bold {neon}", 35, 55)
+        text_line.stylize(f"bold {glow}", 55, len(line))
+        logo_renderables.append(text_line)
+    logo_renderables.append(Text("", justify="center"))
 
     badge = Text(
         "✦ ANTI GAY DEV ✦",
