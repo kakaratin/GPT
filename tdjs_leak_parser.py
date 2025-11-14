@@ -63,25 +63,26 @@ def print_banner():
     backdrop = "#15001f"
 
     logo_lines = [
-        " █████╗ ███╗   ██╗████████╗██╗     ██████╗     ██████╗  █████╗ ██╗   ██╗    ██████╗ ███████╗██╗   ██╗",
-        "██╔══██╗████╗  ██║╚══██╔══╝██║     ██╔══██╗    ██╔══██╗██╔══██╗██║   ██║    ██╔══██╗██╔════╝██║   ██║",
-        "███████║██╔██╗ ██║   ██║   ██║     ██████╔╝    ██████╔╝███████║██║   ██║    ██║  ██║█████╗  ██║   ██║",
-        "██╔══██║██║╚██╗██║   ██║   ██║     ██╔══██╗    ██╔══██╗██╔══██║╚██╗ ██╔╝    ██║  ██║██╔══╝  ╚██╗ ██╔╝",
-        "██║  ██║██║ ╚████║   ██║   ███████╗██║  ██║    ██║  ██║██║  ██║ ╚████╔╝     ██████╔╝███████╗ ╚████╔╝ ",
-        "╚═╝  ╚═╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝    ╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝      ╚═════╝ ╚══════╝  ╚═══╝  ",
+        "████████████╗  ██████╗ ██████╗        ██╗ ██████╗   ███████╗██████╗",
+        "╚══██╔═══██╔╝  ██╔══██╗██╔══██╗       ██║██╔═══██╗  ██╔════╝██╔══██╗",
+        "   ██║   ██║   ██║  ██║██║  ██║       ██║██║   ██║  ███████╗██████╔╝",
+        "   ██║   ██║   ██║  ██║██║  ██║  ██   ██║██║   ██║  ╚════██║██╔══██╗",
+        "   ██║   ██║   ██████╔╝██████╔╝  ╚█████╔╝╚██████╔╝  ███████║██████╔╝",
+        "   ╚═╝   ╚═╝   ╚═════╝ ╚═════╝    ╚════╝  ╚═════╝   ╚══════╝╚═════╝",
     ]
 
     logo_renderables: list[Text] = []
     for line in logo_lines:
         text_line = Text(line, justify="center")
-        text_line.stylize(f"bold {accent}", 0, 35)
-        text_line.stylize(f"bold {neon}", 35, 55)
-        text_line.stylize(f"bold {glow}", 55, len(line))
+        text_line.stylize(f"bold {accent}", 0, 13)
+        text_line.stylize(f"bold {neon}", 15, 31)
+        text_line.stylize(f"bold {glow}", 33, 50)
+        text_line.stylize(f"bold {pulse}", 52, len(line))
         logo_renderables.append(text_line)
     logo_renderables.append(Text("", justify="center"))
 
     badge = Text(
-        "✦ ANTI GAY DEV ✦",
+        "✦ TDJS SUPREMACY ✦",
         style=f"bold {pulse} on #2b0040",
         justify="center",
     )
@@ -123,7 +124,7 @@ def print_banner():
         subtitle="[bold #ff9bff]Leak Parser v2.6[/bold #ff9bff]",
         subtitle_align="right",
         style=f"on {backdrop}",
-        title="[bold #ff53d6]ANTI GAY DEV[/bold #ff53d6]",
+        title="[bold #ff53d6]TDJS OPS[/bold #ff53d6]",
         title_align="left",
     )
 
