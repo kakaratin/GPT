@@ -7,7 +7,7 @@ Property of Tdjs - Professional CLI tool
 import os
 import sys
 
-from rich.console import Console
+from rich.console import Console, Group
 from rich.panel import Panel
 from rich.table import Table
 from rich.progress import (
@@ -56,22 +56,60 @@ console = Console()
 
 def print_banner():
     """Print an INSANE professional CLI banner"""
-    title = Text(justify="center")
-    title.append("████████╗██████╗      ██╗███████╗\n", style="bold magenta")
-    title.append("╚══██╔══╝██╔══██╗     ██║██╔════╝\n", style="bold magenta")
-    title.append("   ██║   ██║  ██║     ██║███████╗\n", style="bold magenta")
-    title.append("   ██║   ██║  ██║██   ██║╚════██║\n", style="bold magenta")
-    title.append("   ██║   ██████╔╝╚█████╔╝███████║\n", style="bold magenta")
-    title.append("   ╚═╝   ╚═════╝  ╚════╝ ╚══════╝\n\n", style="bold magenta")
-    title.append("      LEAK PARSER v2.0\n\n", style="bold yellow")
-    title.append("   🔥 Property of Tdjs 🔥", style="bold green")
+    accent = "#ff4fd8"
+    neon = "#00f0ff"
+    glow = "#f8ff9a"
+
+    logo_lines = [
+        "████████╗██████╗      ██████╗  █████╗ ███████╗",
+        "╚══██╔══╝██╔══██╗    ██╔════╝ ██╔══██╗██╔════╝",
+        "   ██║   ██████╔╝    ██║  ███╗███████║█████╗  ",
+        "   ██║   ██╔═══╝     ██║   ██║██╔══██║██╔══╝  ",
+        "   ██║   ██║         ╚██████╔╝██║  ██║███████╗",
+        "   ╚═╝   ╚═╝          ╚═════╝ ╚═╝  ╚═╝╚══════╝",
+    ]
+
+    logo = Text(justify="center")
+    for line in logo_lines:
+        logo.append(line + "\n", style=f"bold {accent}")
+
+    tagline = Text(
+        "PROPERTY OF TDJS // LEAK OPS DIVISION",
+        style=f"bold {neon}",
+        justify="center",
+    )
+
+    sub_tagline = Text(
+        "Surgical log extraction. Zero mercy.",
+        style=f"italic {glow}",
+        justify="center",
+    )
+
+    feature_grid = Table.grid(padding=(0, 3))
+    feature_grid.add_column(justify="right", style=f"{neon}")
+    feature_grid.add_column(justify="left", style="white")
+    feature_grid.add_row("★", "Multi-domain recon with style")
+    feature_grid.add_row("★", "Tdjs-branded exports on every hit")
+    feature_grid.add_row("★", "Cinematic preview for instant intel")
+
+    banner_body = Group(
+        logo,
+        Text("═" * 58, style=f"{accent}", justify="center"),
+        tagline,
+        sub_tagline,
+        Text("═" * 58, style=f"{accent}", justify="center"),
+        Align.center(feature_grid),
+    )
 
     panel = Panel(
-        title,
+        banner_body,
         box=box.DOUBLE,
-        border_style="bold cyan",
-        padding=(1, 2),
+        border_style=f"bold {neon}",
+        padding=(1, 4),
+        subtitle="[bold #ff8df4]Leak Parser v2.5[/bold #ff8df4]",
+        subtitle_align="right",
     )
+
     console.print("\n")
     console.print(Align.center(panel))
     console.print()
