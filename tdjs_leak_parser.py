@@ -7,7 +7,7 @@ Property of Tdjs - Professional CLI tool
 import os
 import sys
 
-from rich.console import Console, Group
+from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.progress import (
@@ -20,7 +20,6 @@ from rich.progress import (
 from rich.prompt import IntPrompt
 from rich.text import Text
 from rich import box
-from rich.align import Align
 
 DOMAINS = [
     "sso.crunchyroll.co",
@@ -56,80 +55,19 @@ console = Console()
 
 def print_banner():
     """Print an INSANE professional CLI banner"""
-    accent = "#ff53d6"
-    neon = "#00f7ff"
-    glow = "#f8ff9a"
-    pulse = "#a975ff"
-    backdrop = "#15001f"
+    title = Text()
+    title.append("████████╗██████╗      ██╗███████╗\n", style="bold magenta")
+    title.append("╚══██╔══╝██╔══██╗     ██║██╔════╝\n", style="bold magenta")
+    title.append("   ██║   ██║  ██║     ██║███████╗\n", style="bold magenta")
+    title.append("   ██║   ██║  ██║██   ██║╚════██║\n", style="bold magenta")
+    title.append("   ██║   ██████╔╝╚█████╔╝███████║\n", style="bold magenta")
+    title.append("   ╚═╝   ╚═════╝  ╚════╝ ╚══════╝\n\n", style="bold magenta")
+    title.append("      LEAK PARSER v2.0\n\n", style="bold yellow")
+    title.append("   🔥 Property of Tdjs 🔥", style="bold green")
 
-    logo_lines = [
-        "████████████╗  ██████╗ ██████╗        ██╗ ██████╗   ███████╗██████╗",
-        "╚══██╔═══██╔╝  ██╔══██╗██╔══██╗       ██║██╔═══██╗  ██╔════╝██╔══██╗",
-        "   ██║   ██║   ██║  ██║██║  ██║       ██║██║   ██║  ███████╗██████╔╝",
-        "   ██║   ██║   ██║  ██║██║  ██║  ██   ██║██║   ██║  ╚════██║██╔══██╗",
-        "   ██║   ██║   ██████╔╝██████╔╝  ╚█████╔╝╚██████╔╝  ███████║██████╔╝",
-        "   ╚═╝   ╚═╝   ╚═════╝ ╚═════╝    ╚════╝  ╚═════╝   ╚══════╝╚═════╝",
-    ]
-
-    logo_renderables: list[Text] = []
-    for line in logo_lines:
-        text_line = Text(line, justify="center")
-        text_line.stylize(f"bold {accent}", 0, 13)
-        text_line.stylize(f"bold {neon}", 15, 31)
-        text_line.stylize(f"bold {glow}", 33, 50)
-        text_line.stylize(f"bold {pulse}", 52, len(line))
-        logo_renderables.append(text_line)
-    logo_renderables.append(Text("", justify="center"))
-
-    badge = Text(
-        "✦ TDJS SUPREMACY ✦",
-        style=f"bold {pulse} on #2b0040",
-        justify="center",
-    )
-
-    tagline = Text(
-        "PROPERTY OF TDJS // GLITCH OPS DIRECTIVE",
-        style=f"bold {neon}",
-        justify="center",
-    )
-
-    sub_tagline = Text(
-        "Relentless log scrapes. Zero apologies.",
-        style=f"italic {glow}",
-        justify="center",
-    )
-
-    feature_grid = Table.grid(padding=(0, 3))
-    feature_grid.add_column(justify="right", style=f"{neon}")
-    feature_grid.add_column(justify="left", style="white")
-    feature_grid.add_row("⚡", "Anti-filter recon with neon swagger")
-    feature_grid.add_row("♞", "Tdjs-branded exports—every capture stamped")
-    feature_grid.add_row("☣", "Cinematic preview buffering your intel drip")
-
-    banner_body = Group(
-        *logo_renderables,
-        badge,
-        Text("═" * 70, style=f"{accent}", justify="center"),
-        tagline,
-        sub_tagline,
-        Text("═" * 70, style=f"{accent}", justify="center"),
-        Align.center(feature_grid),
-    )
-
-    panel = Panel(
-        banner_body,
-        box=box.DOUBLE,
-        border_style=f"bold {neon}",
-        padding=(1, 5),
-        subtitle="[bold #ff9bff]Leak Parser v2.6[/bold #ff9bff]",
-        subtitle_align="right",
-        style=f"on {backdrop}",
-        title="[bold #ff53d6]TDJS OPS[/bold #ff53d6]",
-        title_align="left",
-    )
-
+    panel = Panel(title, box=box.DOUBLE, border_style="bold cyan", padding=(1, 2))
     console.print("\n")
-    console.print(Align.center(panel))
+    console.print(panel)
     console.print()
 
 
