@@ -7,6 +7,7 @@ Property of Tdjs - Professional CLI tool
 import os
 import sys
 
+from rich.align import Align
 from rich.console import Console, Group
 from rich.panel import Panel
 from rich.table import Table
@@ -73,17 +74,17 @@ def print_banner():
         "bold magenta",
     ]
 
-    ascii_art = Text(justify="left")
+    ascii_art = Text(justify="center")
     for line, style in zip(ascii_lines, ascii_styles):
         ascii_art.append(line + "\n", style=style)
 
-    ascii_panel = Panel(
-        ascii_art,
+    ascii_panel = Panel.fit(
+        Align.center(ascii_art, vertical="middle"),
         border_style="magenta",
         padding=(0, 6, 0, 6),
         box=box.DOUBLE,
-        title="[bold white]TDJS[/bold white]",
-        title_align="left",
+        title="[bold white]ＴDJS[/bold white]",
+        title_align="center",
     )
 
     tagline = Table.grid(padding=(0, 1))
