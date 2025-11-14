@@ -83,7 +83,7 @@ def print_banner():
         border_style="magenta",
         padding=(0, 6, 0, 6),
         box=box.DOUBLE,
-        title="[bold white]ＴDJS[/bold white]",
+        title="[bold white]TDJS[/bold white]",
         title_align="center",
     )
 
@@ -107,13 +107,22 @@ def print_banner():
         subtitle_align="right",
     )
 
-    layout = Table.grid(expand=True)
-    layout.add_column(ratio=2)
-    layout.add_column(ratio=3)
-    layout.add_row(ascii_panel, info_panel)
+    console_width = console.size.width
+
+    if console_width >= 100:
+        layout = Table.grid(expand=True)
+        layout.add_column(ratio=2)
+        layout.add_column(ratio=3)
+        layout.add_row(ascii_panel, info_panel)
+        banner_body = layout
+    else:
+        banner_body = Group(
+            Align.center(ascii_panel, vertical="middle"),
+            Align.center(info_panel, vertical="middle"),
+        )
 
     hero_panel = Panel(
-        layout,
+        banner_body,
         border_style="bold magenta",
         padding=(1, 1),
         box=box.DOUBLE_EDGE,
