@@ -7,7 +7,7 @@ Property of Tdjs - Professional CLI tool
 import os
 import sys
 
-from rich.console import Console
+from rich.console import Console, Group
 from rich.panel import Panel
 from rich.table import Table
 from rich.progress import (
@@ -55,19 +55,74 @@ console = Console()
 
 def print_banner():
     """Print an INSANE professional CLI banner"""
-    title = Text()
-    title.append("████████╗██████╗      ██╗███████╗\n", style="bold magenta")
-    title.append("╚══██╔══╝██╔══██╗     ██║██╔════╝\n", style="bold magenta")
-    title.append("   ██║   ██║  ██║     ██║███████╗\n", style="bold magenta")
-    title.append("   ██║   ██║  ██║██   ██║╚════██║\n", style="bold magenta")
-    title.append("   ██║   ██████╔╝╚█████╔╝███████║\n", style="bold magenta")
-    title.append("   ╚═╝   ╚═════╝  ╚════╝ ╚══════╝\n\n", style="bold magenta")
-    title.append("      LEAK PARSER v2.0\n\n", style="bold yellow")
-    title.append("   🔥 Property of Tdjs 🔥", style="bold green")
+    ascii_lines = [
+        "████████╗██████╗      ██╗███████╗",
+        "╚══██╔══╝██╔══██╗     ██║██╔════╝",
+        "   ██║   ██║  ██║     ██║███████╗",
+        "   ██║   ██║  ██║██   ██║╚════██║",
+        "   ██║   ██████╔╝╚█████╔╝███████║",
+        "   ╚═╝   ╚═════╝  ╚════╝ ╚══════╝",
+    ]
 
-    panel = Panel(title, box=box.DOUBLE, border_style="bold cyan", padding=(1, 2))
+    ascii_styles = [
+        "bold magenta",
+        "bold magenta",
+        "bold magenta",
+        "bold magenta",
+        "bold magenta",
+        "bold magenta",
+    ]
+
+    ascii_art = Text(justify="left")
+    for line, style in zip(ascii_lines, ascii_styles):
+        ascii_art.append(line + "\n", style=style)
+
+    ascii_panel = Panel(
+        ascii_art,
+        border_style="magenta",
+        padding=(0, 6, 0, 6),
+        box=box.DOUBLE,
+        title="[bold white]TDJS[/bold white]",
+        title_align="left",
+    )
+
+    tagline = Table.grid(padding=(0, 1))
+    tagline.add_row(Text("LEAK PARSER v2.0", style="bold yellow"))
+    tagline.add_row(Text("Property of Tdjs", style="bold green"))
+    tagline.add_row(Text("Professional CLI toolkit for leak forensics", style="cyan"))
+
+    features = Table.grid(padding=(0, 1))
+    features.add_column(justify="center", style="bold green", width=3)
+    features.add_column(justify="left", style="white")
+    features.add_row("◆", "Hyper-fast domain scanning with Rich feedback")
+    features.add_row("◆", "Smart filtering & clean TDJS-branded exports")
+    features.add_row("◆", "Termux-ready visuals engineered for clarity")
+
+    info_panel = Panel(
+        Group(tagline, features),
+        border_style="cyan",
+        padding=(1, 2),
+        subtitle="[bold magenta]🔥 TDJS CERTIFIED 🔥[/bold magenta]",
+        subtitle_align="right",
+    )
+
+    layout = Table.grid(expand=True)
+    layout.add_column(ratio=2)
+    layout.add_column(ratio=3)
+    layout.add_row(ascii_panel, info_panel)
+
+    hero_panel = Panel(
+        layout,
+        border_style="bold magenta",
+        padding=(1, 1),
+        box=box.DOUBLE_EDGE,
+        title="[bold cyan]TDJS LEAK OPS CONSOLE[/bold cyan]",
+        subtitle="[white]Stay lethal. Stay branded.[/white]",
+        subtitle_align="right",
+    )
+
     console.print("\n")
-    console.print(panel)
+    console.print(hero_panel)
     console.print()
 
 
