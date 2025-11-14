@@ -62,18 +62,49 @@ def print_banner():
     pulse = "#a975ff"
     backdrop = "#15001f"
 
-    logo_lines = [
-        "          _   _ _______ _____    _____      __     __  _____  ________      __",
-        "    /\\   | \\ | |__   __|_   _|  / ____|   /\\\\ \\   / / |  __ \\|  ____\\ \\    / /",
-        "   /  \\  |  \\| |  | |    | |   | |  __   /  \\\\ \\_/ /  | |  | | |__   \\ \\  / /",
-        "  / /\\ \\ | . ` |  | |    | |   | | |_ | / /\\ \\\\   /   | |  | |  __|   \\ \\/ /",
-        " / ____ \\| |\\  |  | |   _| |_  | |__| |/ ____ \\| |    | |__| | |____   \\  /",
-        "/_/    \\_\\_| \\_|  |_|  |_____|  \\_____/_/    \\_\\_|    |_____/|______|   \\_/",
+    logo_blocks = [
+        (
+            accent,
+            [
+                "          _   _ _______ _____",
+                "    /\\   | \\ | |__   __|_   _|",
+                "   /  \\  |  \\| |  | |    | |",
+                "  / /\\ \\ | . ` |  | |    | |",
+                " / ____ \\| |\\  |  | |   _| |_",
+                "/_/    \\_\\_| \\_|  |_|  |_____|",
+            ],
+        ),
+        (
+            neon,
+            [
+                "  _____      __     __",
+                " / ____|   /\\ \\   / /",
+                "| |  __   /  \\ \\_/ /",
+                "| | |_ | / /\\ \\   /",
+                "| |__| |/ ____ \\| |",
+                " \\_____/_/    \\_\\_|",
+            ],
+        ),
+        (
+            glow,
+            [
+                " _____  ________      __",
+                "|  __ \\|  ____\\ \\    / /",
+                "| |  | | |__   \\ \\  / /",
+                "| |  | |  __|   \\ \\/ /",
+                "| |__| | |____   \\  /",
+                "|_____/|______|   \\_/",
+            ],
+        ),
     ]
 
-    logo = Text(justify="center")
-    for line in logo_lines:
-        logo.append(line + "\n", style=f"bold {accent}")
+    logo_renderables: list[Text] = []
+    for color, block in logo_blocks:
+        for line in block:
+            logo_renderables.append(
+                Text(line, style=f"bold {color}", justify="center")
+            )
+        logo_renderables.append(Text("", justify="center"))
 
     badge = Text(
         "✦ ANTI GAY DEV ✦",
@@ -101,7 +132,7 @@ def print_banner():
     feature_grid.add_row("☣", "Cinematic preview buffering your intel drip")
 
     banner_body = Group(
-        logo,
+        *logo_renderables,
         badge,
         Text("═" * 70, style=f"{accent}", justify="center"),
         tagline,
